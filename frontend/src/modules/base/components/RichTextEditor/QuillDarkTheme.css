@@ -1,0 +1,35 @@
+/* QuillDarkTheme.css */
+.editor-height .ql-editor {
+  min-height: 300px;
+}
+
+.dark-theme .quill {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+  border: 1px solid #444;
+}
+
+.dark-theme .ql-toolbar {
+  background-color: #383838;
+  border-color: #444;
+}
+
+.dark-theme .ql-toolbar button,
+.dark-theme .ql-toolbar .ql-picker {
+  color: #e0e0e0;
+}
+
+.dark-theme .ql-toolbar button:hover,
+.dark-theme .ql-toolbar button:focus,
+.dark-theme .ql-toolbar .ql-picker:hover,
+.dark-theme .ql-toolbar .ql-picker:focus {
+  color: #fff;
+}
+
+.dark-theme .ql-editor {
+  color: #e0e0e0;
+}
+
+.dark-theme .ql-editor.ql-blank::before {
+  color: #888;
+}

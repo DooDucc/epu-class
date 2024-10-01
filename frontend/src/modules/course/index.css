@@ -1,0 +1,15 @@
+.message-content .ql-editor {
+  padding: 0 !important;
+}
+
+.message-content ol, ul {
+  padding: 0;
+}
+
+.message-content .ql-editor pre {
+  margin: 0;
+}
+
+.message-content .ql-editor blockquote {
+  margin: 0;
+}

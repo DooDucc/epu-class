@@ -1,0 +1,177 @@
+import React, { useState, useEffect, useCallback } from "react";
+import { appPaths, useAppDispatch, useAppSelector } from "../../base";
+import { createClasses, getMajors } from "../redux/actions";
+import {
+  Container,
+  Typography,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Select,
+  MenuItem,
+  Button,
+  Box,
+  FormControl,
+  InputLabel,
+  Grid,
+} from "@mui/material";
+import { generateClassCode } from "../utils";
+import { ClassThumbnail } from "../components";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { setCreateClass } from "../redux/slice";
+
+const CreateClass = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const {
+    createClass: { majors, thumbnail },
+  } = useAppSelector((state) => state.class);
+
+  const { user } = useAppSelector((state) => state.auth);
+
+  const [classCode] = useState(generateClassCode());
+  const [className, setClassName] = useState("");
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [isPublished, setIsPublished] = useState(false);
+  const [majorId, setMajorId] = useState("");
+
+  useEffect(() => {
+    dispatch(getMajors());
+  }, [dispatch]);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setThumbnailPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (user) {
+      dispatch(
+        createClasses({
+          classCode,
+          className,
+          isPublished,
+          thumbnailUrl: thumbnail,
+          majorId,
+          teacherId: user.id,
+          handleSuccess: () => {
+            dispatch(
+              setCreateClass({
+                thumbnail: "",
+                uploadState: "",
+              })
+            );
+            toast.success("Class is created successfully");
+            navigate(appPaths.TEACHER_CLASS);
+          },
+        })
+      );
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        mt: 10,
+        width: "100%",
+      }}
+    >
+      <Container maxWidth="xl">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}
+        >
+          <Typography variant="h4" component="h1">
+            Create New Class
+          </Typography>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            form="create-class-form"
+          >
+            Create Class
+          </Button>
+        </Box>
+        <Box
+          component="form"
+          id="create-class-form"
+          onSubmit={handleSubmit}
+          sx={{ mt: 3 }}
+        >
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Class Code"
+                value={classCode}
+                disabled
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Class Name"
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+                required
+              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="major-select-label">Major</InputLabel>
+                <Select
+                  labelId="major-select-label"
+                  value={majorId}
+                  onChange={(e) => setMajorId(e.target.value)}
+                  label="Major"
+                >
+                  {majors.map((major) => (
+                    <MenuItem key={major.id} value={major.id}>
+                      {major.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isPublished}
+                    onChange={(e) => setIsPublished(e.target.checked)}
+                  />
+                }
+                label="Published"
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <ClassThumbnail
+                thumbnailPreview={thumbnailPreview}
+                onDrop={onDrop}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+export default CreateClass;

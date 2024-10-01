@@ -1,0 +1,258 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id       String  @id @default(uuid())
+  phone    String?
+  fullName String?
+  avatar   String?
+  isActive Boolean @default(false)
+
+  teacher      Teacher[]
+  student      Student[]
+  sentMessages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Teacher {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+
+  classes Class[]
+  courses Course[]
+  lessons Lesson[]
+  chats   Chat[]
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Student {
+  id          String @id @default(uuid())
+  studentCode String @unique
+  password    String
+
+  classes        Class[]
+  courses        Course[]
+  userProgresses UserProgress[]
+  chats          Chat[]
+  lessons        Lesson[]
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Major {
+  id      String  @id @default(uuid())
+  name    String  @unique
+  classes Class[]
+}
+
+model Class {
+  id          String  @id @default(uuid())
+  classCode   String  @unique
+  className   String
+  thumbnail   String
+  isPublished Boolean @default(false)
+
+  majorId String?
+  major   Major?  @relation(fields: [majorId], references: [id])
+
+  teacherId String?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+
+  courses  Course[]
+  students Student[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([majorId])
+  @@index([teacherId])
+  @@fulltext([className])
+}
+
+model Course {
+  id          String  @id @default(uuid())
+  title       String
+  desc        String? @db.Text
+  imageUrl    String? @db.Text
+  isPublished Boolean @default(false)
+
+  teacherId String?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+
+  classId String?
+  class   Class?  @relation(fields: [classId], references: [id])
+
+  lessons  Lesson[]
+  students Student[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([classId])
+  @@index([teacherId])
+  @@fulltext([title, desc])
+}
+
+model Note {
+  id        String @id @default(uuid())
+  content   String
+  lessonId  String
+  studentId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([lessonId, studentId])
+}
+
+model Exercise {
+  id   String @id @default(uuid())
+  name String
+  url  String
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String?
+
+  @@index([lessonId])
+}
+
+model SubmittedExercise {
+  id        String  @id @default(uuid())
+  exercises Json    @db.Json
+  lessonId  String
+  studentId String
+  teacherId String
+  comment   String? @db.Text
+  point     String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([lessonId, studentId])
+  @@index([teacherId])
+}
+
+model Attachment {
+  id   String @id @default(uuid())
+  name String
+  url  String
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+}
+
+model Lesson {
+  id            String  @id @default(uuid())
+  title         String
+  desc          String? @db.Text
+  position      Int
+  isPublished   Boolean @default(false)
+  videoUrl      String? @db.Text
+  videoDuration Int?    @default(0)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  teacherId String?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+
+  userProgress UserProgress[]
+  attachments  Attachment[]
+  exercises    Exercise[]
+  chats        Chat[]
+  students     Student[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+  @@index([teacherId])
+}
+
+model UserProgress {
+  id          String  @id @default(uuid())
+  isCompleted Boolean @default(false)
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, lessonId])
+  @@index([lessonId])
+}
+
+model Chat {
+  id String @id @default(uuid())
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  teacherId String
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([lessonId, studentId])
+  @@index([lessonId])
+  @@index([studentId])
+  @@index([teacherId])
+}
+
+model Message {
+  id       String @id @default(uuid())
+  content  String @db.Text
+  chatId   String
+  chat     Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  senderId String
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([chatId])
+  @@index([senderId])
+}
