@@ -86,10 +86,10 @@ export type LessonType = {
   createdAt: string;
   updatedAt: string;
   course: CourseType;
-  userProgress: UserProgressType[];
-  attachments: AttachmentType[];
-  note: any;
-  exercises: ExerciseType[];
+  userProgress?: UserProgressType[];
+  attachments?: AttachmentType[];
+  note?: any;
+  exercises?: ExerciseType[];
 };
 
 export type CourseType = {

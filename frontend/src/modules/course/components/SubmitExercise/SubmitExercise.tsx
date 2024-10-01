@@ -288,7 +288,7 @@ const SubmitExercise = ({
           variant="outlined"
           onClick={handleClick}
           endIcon={<ArrowDropDownIcon />}
-          sx={{ width: 150, justifyContent: "space-between" }}
+          sx={{ width: "fit-content", justifyContent: "space-between" }}
           disabled={uploadState.isUploading}
         >
           {submittedItems.length > 0

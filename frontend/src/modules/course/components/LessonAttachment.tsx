@@ -18,6 +18,10 @@ const LessonAttachment = ({
 }) => {
   const theme = useTheme();
 
+  if (attachments?.length === 0) {
+    return null;
+  }
+
   return (
     <Box sx={{ boxShadow: theme.shadows[3], p: 2, borderRadius: 2, mt: 2 }}>
       {attachments?.length > 0 && (

@@ -31,6 +31,10 @@ const LessonExercise = ({
   const theme = useTheme();
   const { user } = useAppSelector((state) => state.auth);
 
+  if (exercises?.length === 0) {
+    return null;
+  }
+
   return (
     <Box sx={{ boxShadow: theme.shadows[3], p: 2, borderRadius: 2, mt: 2 }}>
       {exercises?.length > 0 && (

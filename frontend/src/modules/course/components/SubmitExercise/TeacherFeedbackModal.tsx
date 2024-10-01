@@ -36,6 +36,7 @@ const TeacherFeedbackModal = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          pb: 1,
         }}
       >
         <Typography variant="h5">Teacher Feedback</Typography>

@@ -127,6 +127,9 @@ export const getCourse = async (req: Request, res: Response) => {
             exercises: true,
             attachments: true,
           },
+          orderBy: {
+            position: "asc",
+          },
         },
         students: true,
       },

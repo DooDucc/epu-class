@@ -95,6 +95,7 @@ export type StudentLessonType = {
   videoUrl: string;
   videoDuration: number;
   userProgress: UserProgressType[];
+  courseId: string;
 };
 
 export type StudentCourseType = {

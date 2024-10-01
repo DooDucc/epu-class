@@ -18,8 +18,9 @@ import { setCourse } from "../redux/slice";
 const CourseDetails = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { id: courseId } = useParams<{
+  const { id: courseId, lessonId } = useParams<{
     id: string;
+    lessonId: string;
   }>();
   const theme = useTheme();
 
@@ -64,6 +65,16 @@ const CourseDetails = () => {
         setCompletedLessons(completed);
       }
 
+      if (lessonId) {
+        const lesson = updatingCourse?.lessons.find(
+          (lesson) => lesson.id === lessonId
+        );
+        if (lesson) {
+          setSelectedLesson(lesson);
+        }
+        return;
+      }
+
       // New logic to set the selected lesson
       const lastCompletedIndex = publishedLessons.findIndex(
         (lesson, index: number) => {
@@ -102,7 +113,7 @@ const CourseDetails = () => {
         );
       }
     }
-  }, [updatingCourse, user, publishedLessons, selectedLesson]);
+  }, [updatingCourse, user, publishedLessons, selectedLesson, lessonId]);
 
   const handleLessonSelect = (lesson: LessonType) => {
     dispatch(
@@ -142,7 +153,7 @@ const CourseDetails = () => {
       <CourseDetailsSidebar
         publishedLessons={publishedLessons}
         completedLessons={completedLessons}
-        selectedLesson={selectedLesson || ({} as LessonType)}
+        selectedLesson={selectedLesson}
         handleLessonSelect={handleLessonSelect}
       />
 
@@ -175,11 +186,13 @@ const CourseDetails = () => {
 
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
-                <LessonAttachment attachments={selectedLesson.attachments} />
+                <LessonAttachment
+                  attachments={selectedLesson.attachments || []}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
                 <LessonExercise
-                  exercises={selectedLesson.exercises}
+                  exercises={selectedLesson.exercises || []}
                   selectedLesson={selectedLesson}
                   completedLessons={completedLessons}
                   setCompletedLessons={setCompletedLessons}

@@ -6,7 +6,7 @@ import { LessonType } from "../types";
 interface CourseDetailsSidebarProps {
   publishedLessons: LessonType[];
   completedLessons: string[];
-  selectedLesson: LessonType;
+  selectedLesson: LessonType | null;
   handleLessonSelect: (lesson: LessonType) => void;
 }
 

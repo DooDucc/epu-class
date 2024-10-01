@@ -15,6 +15,7 @@ export const handleConvertLessons = (data: StudentLessonResponse[]) => {
       videoUrl: item.videoUrl,
       videoDuration: item.videoDuration,
       userProgress: item.userProgress,
+      courseId: item.courseId,
     };
 
     if (classInfo && !classMap.has(classInfo.id)) {
