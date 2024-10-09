@@ -23,6 +23,7 @@ import {
   UpdateLesson,
 } from "../lesson";
 import { Profile } from "../profile";
+import { ReportPage } from "../report";
 import { StudentDetail, StudentsPage } from "../student";
 import { PrivateRoute, PublicRoute } from "./components";
 
@@ -116,7 +117,7 @@ export const privateRoutes = [
   },
   {
     path: appPaths.TEACHER_REPORT,
-    element: <HomePage />,
+    element: <ReportPage />,
   },
   {
     path: appPaths.STUDENT_CLASS,

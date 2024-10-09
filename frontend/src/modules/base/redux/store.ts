@@ -11,6 +11,7 @@ import { lessonSlice } from "../../lesson";
 import { studentSlice } from "../../student";
 import { chatSlice } from "../../chat";
 import { exerciseSlice } from "../../exercise";
+import { reportSlice } from "../../report";
 import themeReducer from "./themeSlice";
 
 const rootReducer = combineReducers({
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   [studentSlice.name]: studentSlice.reducer,
   [chatSlice.name]: chatSlice.reducer,
   [exerciseSlice.name]: exerciseSlice.reducer,
+  [reportSlice.name]: reportSlice.reducer,
 });
 
 const listenerMiddlewareInstance = createListenerMiddleware({

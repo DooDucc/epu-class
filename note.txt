@@ -1,5 +1,4 @@
-- Send message, update last message of current lesson's chat in sidebar
-  scroll to the last message (Done)
-- Put lesson's chat with newest message to the top (Done - Need to test)
-- Search chat (Done)
-- Delete chat (just in view of sidebar not delete in db) (TBD)
+- Tổng sinh viên của các lớp theo tgian (tháng) 
+- Tổng sinh viên của các môn theo tgian (tháng) 
+- Tỉ lệ điểm bài tập (theo bài học, môn học, lớp học)
+- Top sinh viên điểm cao (theo lớp học, môn học, bài học)

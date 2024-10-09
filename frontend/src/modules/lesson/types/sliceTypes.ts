@@ -10,8 +10,8 @@ export type LessonState = {
   createLesson: {
     courses: CourseType[];
     videoUrl: string;
-    attachments: { name: string; url: string; type: string }[];
-    exercises: { name: string; url: string; type: string }[];
+    attachments: { name: string; url: string; type?: string }[];
+    exercises: { name: string; url: string; type?: string }[];
     uploadState: {
       video: string;
       attachment: string;
