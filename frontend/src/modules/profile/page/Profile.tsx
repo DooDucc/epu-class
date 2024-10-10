@@ -4,7 +4,7 @@ import { RootState } from "../../base/redux/store";
 import { Box, Typography, Avatar, Paper, Grid, Container } from "@mui/material";
 
 const Profile: React.FC = () => {
-  const user = useSelector((state: RootState) => state.auth.user);
+  const { user } = useSelector((state: RootState) => state.auth);
 
   if (!user) {
     return <Typography>No user information available.</Typography>;
@@ -31,12 +31,19 @@ const Profile: React.FC = () => {
               {user.fullName}
             </Typography>
             <Box sx={{ marginBottom: 2 }}>
-              <Typography variant="subtitle1" color="text.secondary">
-                Email: {user.email}
-              </Typography>
+              {user.email && (
+                <Typography variant="subtitle1" color="text.secondary">
+                  Email: {user.email}
+                </Typography>
+              )}
               {user.studentCode && (
                 <Typography variant="subtitle1" color="text.secondary">
                   Student Code: {user.studentCode}
+                </Typography>
+              )}
+              {user.class && (
+                <Typography variant="subtitle1" color="text.secondary">
+                  Class: {user.class}
                 </Typography>
               )}
               <Typography variant="subtitle1" color="text.secondary">

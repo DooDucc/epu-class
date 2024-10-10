@@ -25,10 +25,16 @@ const StudentsOfClass = () => {
   const years = Array.from({ length: 5 }, (_, i) => selectedYear - i);
 
   useEffect(() => {
-    if (classes.state === COMPONENT_STAGES.SUCCESS && classes.data.length > 0) {
+    if (classes.data.length > 0) {
+      setSelectedClass(classes.data[0].id);
+    }
+  }, [classes]);
+
+  useEffect(() => {
+    if (selectedClass) {
       handleGetStudentsByClass(selectedYear, selectedClass);
     }
-  }, [selectedYear, classes, selectedClass]);
+  }, [selectedYear, selectedClass]);
 
   const handleGetStudentsByClass = (year: number, classId: string) => {
     dispatch(

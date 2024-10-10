@@ -20,14 +20,20 @@ const StudentsOfCourse = () => {
   const { courses, studentsByCourse } = useAppSelector((state) => state.report);
 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedCourse, setSelectedCourse] = useState(courses?.data?.[0]?.id);
+  const [selectedCourse, setSelectedCourse] = useState("");
   const years = Array.from({ length: 5 }, (_, i) => selectedYear - i);
 
   useEffect(() => {
-    if (courses.state === COMPONENT_STAGES.SUCCESS && courses.data.length > 0) {
+    if (courses.data.length > 0) {
+      setSelectedCourse(courses.data[0].id);
+    }
+  }, [courses]);
+
+  useEffect(() => {
+    if (selectedCourse) {
       handleGetStudentsByCourse(selectedYear, selectedCourse);
     }
-  }, [selectedYear, courses, selectedCourse]);
+  }, [selectedYear, selectedCourse]);
 
   const handleGetStudentsByCourse = (year: number, courseId: string) => {
     dispatch(
@@ -49,7 +55,7 @@ const StudentsOfCourse = () => {
   return (
     <>
       {studentsByCourse.state === COMPONENT_STAGES.SUCCESS ? (
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={12} pl={0}>
           <Paper elevation={3}>
             <Box p={1}>
               <Box

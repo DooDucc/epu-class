@@ -44,9 +44,10 @@ model Teacher {
 }
 
 model Student {
-  id          String @id @default(uuid())
-  studentCode String @unique
+  id          String  @id @default(uuid())
+  studentCode String  @unique
   password    String
+  class       String?
 
   classes        Class[]
   courses        Course[]

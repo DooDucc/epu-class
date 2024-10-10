@@ -8,6 +8,7 @@ import {
   Course,
   CourseExerciseStats,
   ReportState,
+  TotalInfo,
 } from "../types";
 
 const initialState: ReportState = {
@@ -55,6 +56,15 @@ const initialState: ReportState = {
   },
   lessons: {
     data: [],
+    state: COMPONENT_STAGES.LOADING,
+  },
+  totalInfo: {
+    data: {
+      classCount: 0,
+      courseCount: 0,
+      lessonCount: 0,
+      studentCount: 0,
+    },
     state: COMPONENT_STAGES.LOADING,
   },
 };
@@ -138,6 +148,15 @@ export const reportSlice = createSlice({
     ) => {
       state.courses = { ...state.courses, ...action.payload };
     },
+    setTotalInfo: (
+      state,
+      action: PayloadAction<{
+        data?: TotalInfo;
+        state?: string;
+      }>
+    ) => {
+      state.totalInfo = { ...state.totalInfo, ...action.payload };
+    },
   },
 });
 
@@ -149,6 +168,7 @@ export const {
   setClassExerciseStats,
   setClasses,
   setCourses,
+  setTotalInfo,
 } = reportSlice.actions;
 
 export default reportSlice.reducer;

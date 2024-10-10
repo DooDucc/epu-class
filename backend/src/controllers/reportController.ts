@@ -1,15 +1,5 @@
 import { prismaClient } from "..";
 import { Request, Response } from "express";
-import {
-  startOfWeek,
-  startOfMonth,
-  startOfQuarter,
-  startOfYear,
-  endOfWeek,
-  endOfMonth,
-  endOfQuarter,
-  endOfYear,
-} from "date-fns";
 
 export async function getStudentsByYear(req: Request, res: Response) {
   try {
@@ -151,9 +141,12 @@ export async function getCourseExerciseStats(req: Request, res: Response) {
   try {
     const { courseId } = req.params;
 
+    // @ts-ignore
+    const teacherId = req.user.id;
+
     // Get all lessons for the course
     const lessons = await prismaClient.lesson.findMany({
-      where: { courseId },
+      where: { courseId, teacherId, isPublished: true },
       select: { id: true },
     });
 
@@ -204,9 +197,12 @@ export async function getClassExerciseStats(req: Request, res: Response) {
   try {
     const { classId } = req.params;
 
+    // @ts-ignore
+    const teacherId = req.user.id;
+
     // Get all courses for the class
     const courses = await prismaClient.course.findMany({
-      where: { classId },
+      where: { classId, teacherId, isPublished: true },
       select: { id: true },
     });
 
@@ -313,6 +309,48 @@ export async function getSubmittedExercisesWithStudentInfo(
     return res.json(formattedResults);
   } catch (error) {
     console.error("Error in getSubmittedExercisesWithStudentInfo:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export async function getTotalInfo(req: Request, res: Response) {
+  try {
+    // @ts-ignore
+    const teacherId = req.user.id;
+
+    const [classCount, courseCount, lessonCount, studentCount] =
+      await Promise.all([
+        prismaClient.class.count({
+          where: { teacherId, isPublished: true },
+        }),
+        prismaClient.course.count({
+          where: { teacherId, isPublished: true },
+        }),
+        prismaClient.lesson.count({
+          where: { teacherId, isPublished: true },
+        }),
+        prismaClient.student.count({
+          where: {
+            classes: {
+              some: {
+                teacherId,
+                isPublished: true,
+              },
+            },
+          },
+        }),
+      ]);
+
+    const totalInfo = {
+      classCount,
+      courseCount,
+      lessonCount,
+      studentCount,
+    };
+
+    return res.json(totalInfo);
+  } catch (error) {
+    console.error("Error in getTotalInfo:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }

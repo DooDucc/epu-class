@@ -6,6 +6,7 @@ import {
   getSubmittedExerciseStats,
   getCourseExerciseStats,
   getClassExerciseStats,
+  getTotalInfo,
 } from "../controllers/reportController";
 
 export { Router } from "express";
@@ -41,5 +42,7 @@ reportRoutes.get(
   [authMiddleware],
   getClassExerciseStats
 );
+
+reportRoutes.get("/total-info", [authMiddleware], getTotalInfo);
 
 export default reportRoutes;

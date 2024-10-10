@@ -6,6 +6,7 @@ import {
   CoursesResponse,
   StudentByClassResponse,
   StudentByCourseResponse,
+  TotalInfoResponse,
 } from "../types";
 
 export const apiGetStudentsByYear = (
@@ -48,4 +49,8 @@ export const apiGetCourses = (): Promise<CoursesResponse> => {
 
 export const apiGetLessons = (courseId: string) => {
   return authorizedApi.get(`/lessons/${courseId}`);
+};
+
+export const apiGetTotalInfo = (): Promise<TotalInfoResponse> => {
+  return authorizedApi.get("/reports/total-info");
 };

@@ -52,3 +52,12 @@ export type CoursesResponse = {
     courses: CourseResponse[];
   };
 };
+
+export type TotalInfoResponse = {
+  data: {
+    classCount: number;
+    courseCount: number;
+    lessonCount: number;
+    studentCount: number;
+  };
+};

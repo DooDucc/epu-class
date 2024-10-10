@@ -47,6 +47,7 @@ export const authMiddleware = async (
         ...user,
         role: ROLE.STUDENT,
         studentCode: student.studentCode,
+        class: student.class,
         id: student.id,
       };
     } else if (teacher) {

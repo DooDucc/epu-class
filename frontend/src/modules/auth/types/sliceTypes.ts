@@ -13,4 +13,7 @@ export type User = {
   createdAt: string;
   updatedAt: string;
   role: string;
+  studentCode: string;
+  class: string;
+  email: string;
 };

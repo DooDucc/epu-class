@@ -31,6 +31,10 @@ export type ReportState = {
     data: any[];
     state: string;
   };
+  totalInfo: {
+    data: TotalInfo;
+    state: string;
+  };
 };
 
 export type AmountOfStudents = {
@@ -64,4 +68,11 @@ export type Course = {
   title: string;
   imageUrl: string;
   classId: string;
+};
+
+export type TotalInfo = {
+  classCount: number;
+  courseCount: number;
+  lessonCount: number;
+  studentCount: number;
 };

@@ -7,6 +7,7 @@ import {
   apiGetStudentsByCourseAndYear,
   apiGetStudentsByYear,
   apiGetSubmittedExerciseStats,
+  apiGetTotalInfo,
 } from "./services";
 import {
   setClasses,
@@ -16,6 +17,7 @@ import {
   setStudentsByClass,
   setStudentsByCourse,
   setSubmittedExerciseStats,
+  setTotalInfo,
 } from "./slice";
 import { COMPONENT_STAGES } from "../../base";
 import {
@@ -242,6 +244,40 @@ export const getCourses = createAsyncThunk(
       dispatch(
         setCourses({
           data: [],
+          state: COMPONENT_STAGES.FAIL,
+        })
+      );
+    }
+  }
+);
+
+export const getTotalInfo = createAsyncThunk(
+  "report/getTotalInfo",
+  async (_, { dispatch }) => {
+    try {
+      dispatch(
+        setTotalInfo({
+          state: COMPONENT_STAGES.LOADING,
+        })
+      );
+
+      const res = await apiGetTotalInfo();
+
+      dispatch(
+        setTotalInfo({
+          data: res?.data,
+          state: COMPONENT_STAGES.SUCCESS,
+        })
+      );
+    } catch {
+      dispatch(
+        setTotalInfo({
+          data: {
+            classCount: 0,
+            courseCount: 0,
+            lessonCount: 0,
+            studentCount: 0,
+          },
           state: COMPONENT_STAGES.FAIL,
         })
       );
