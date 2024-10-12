@@ -6,7 +6,7 @@ import {
   GetLessonResponse,
   GetLessonsAPIData,
   GetLessonsResponse,
-  GetStudentLessonsResponse,
+  GetStudentCoursesResponse,
 } from "../types";
 
 export const apiGetLessons = (
@@ -41,8 +41,8 @@ export const apiGetCourses = (): Promise<GetCoursesResponse> => {
   return authorizedApi.get(`/courses/all`);
 };
 
-export const apiGetStudentLessons = (
+export const apiGetStudentCourses = (
   studentId: string
-): Promise<GetStudentLessonsResponse> => {
+): Promise<GetStudentCoursesResponse> => {
   return authorizedApi.get(`/lessons/student/${studentId}`);
 };

@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../base";
-import { Course, Lesson } from "../types";
+import { Course, Exercise, Lesson } from "../types";
 
 interface ExerciseSidebarProps {
   handleSelectedLessonExercises: (lesson: Lesson) => void;
@@ -32,6 +32,26 @@ const ExerciseSidebar = ({
   const [openClasses, setOpenClasses] = useState<Record<string, boolean>>({});
   const [openCourses, setOpenCourses] = useState<Record<string, boolean>>({});
   const [searchLessons, setSearchLessons] = useState<string>("");
+  const [filteredData, setFilteredData] = useState<Exercise[]>([]);
+
+  useEffect(() => {
+    setFilteredData(submittedExercises);
+  }, [submittedExercises]);
+
+  useEffect(() => {
+    if (searchLessons) {
+      const filtered = submittedExercises.filter((submittedExercise) =>
+        submittedExercise.courses.some((course) =>
+          course.lessons.some((lesson) =>
+            lesson.title.toLowerCase().includes(searchLessons.toLowerCase())
+          )
+        )
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(submittedExercises);
+    }
+  }, [searchLessons, submittedExercises]);
 
   const handleToggle = (
     id: string,
@@ -117,7 +137,7 @@ const ExerciseSidebar = ({
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Search lessons..."
+            placeholder="Search by lessons name..."
             value={searchLessons}
             onChange={(e) => setSearchLessons(e.target.value)}
             size="small"
@@ -138,7 +158,7 @@ const ExerciseSidebar = ({
             overflow: "auto",
           }}
         >
-          {submittedExercises.map((exerciseClass) => (
+          {filteredData.map((exerciseClass) => (
             <Box
               key={exerciseClass.id}
               sx={{ borderBottom: "1px solid #e0e0e0", boxShadow: 3 }}

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { COMPONENT_STAGES } from "../../base/utils";
-import { CourseType, LessonState, LessonType, StudentLesson } from "../types";
+import { CourseType, LessonState, LessonType, StudentCourse } from "../types";
 
 const initialState: LessonState = {
   lesson: {
@@ -23,11 +23,8 @@ const initialState: LessonState = {
       exercise: "",
     },
   },
-  studentLessons: {
+  studentCourse: {
     data: [],
-    state: COMPONENT_STAGES.LOADING,
-    currentPage: 1,
-    totalPages: 0,
   },
 };
 
@@ -70,24 +67,21 @@ export const lessonSlice = createSlice({
         ...action.payload,
       };
     },
-    setStudentLessons: (
+    setStudentCourse: (
       state,
       action: PayloadAction<{
-        data?: StudentLesson[];
-        state?: string;
-        currentPage?: number;
-        totalPages?: number;
+        data?: StudentCourse[];
       }>
     ) => {
-      state.studentLessons = {
-        ...state.studentLessons,
+      state.studentCourse = {
+        ...state.studentCourse,
         ...action.payload,
       };
     },
   },
 });
 
-export const { setLesson, setCreateLesson, setStudentLessons } =
+export const { setLesson, setCreateLesson, setStudentCourse } =
   lessonSlice.actions;
 
 export default lessonSlice.reducer;

@@ -42,6 +42,6 @@ export type UpdateLessonParams = {
   handleFail: () => void;
 };
 
-export type GetStudentLessonsParams = {
+export type GetStudentCoursesParams = {
   studentId: string;
 };

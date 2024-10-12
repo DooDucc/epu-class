@@ -19,11 +19,8 @@ export type LessonState = {
       exercise: string;
     };
   };
-  studentLessons: {
-    data: StudentLesson[];
-    state: string;
-    currentPage: number;
-    totalPages: number;
+  studentCourse: {
+    data: StudentCourse[];
   };
 };
 
@@ -106,7 +103,7 @@ export type StudentCourseType = {
   lessons: StudentLessonType[];
 };
 
-export type StudentLesson = {
+export type StudentCourse = {
   id: string;
   className: string;
   courses: StudentCourseType[];

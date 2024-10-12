@@ -100,7 +100,7 @@ export type UserProgressResponse = {
   updatedAt: string;
 };
 
-export type StudentLessonResponse = {
+export type StudentCourseResponse = {
   id: string;
   title: string;
   desc: string;
@@ -116,9 +116,9 @@ export type StudentLessonResponse = {
   course: CourseResponse;
 };
 
-export type GetStudentLessonsResponse = {
+export type GetStudentCoursesResponse = {
   data: {
-    lessons: StudentLessonResponse[];
+    lessons: StudentCourseResponse[];
     currentPage: number;
     totalPages: number;
     totalCount: number;

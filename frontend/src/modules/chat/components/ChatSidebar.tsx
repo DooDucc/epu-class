@@ -111,7 +111,7 @@ const ChatSidebar = ({
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Search chats..."
+            placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             size="small"

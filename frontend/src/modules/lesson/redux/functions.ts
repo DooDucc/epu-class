@@ -1,6 +1,6 @@
-import { StudentLessonResponse } from "../types";
+import { StudentCourseResponse } from "../types";
 
-export const handleConvertLessons = (data: StudentLessonResponse[]) => {
+export const handleConvertCourses = (data: StudentCourseResponse[]) => {
   const classMap = new Map();
 
   data.forEach((item) => {

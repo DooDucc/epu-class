@@ -18,7 +18,7 @@ import { ExercisePage } from "../exercise";
 import { HomePage } from "../home";
 import {
   CreateLesson,
-  StudentLesson,
+  StudentCourse,
   TeacherLesson,
   UpdateLesson,
 } from "../lesson";
@@ -141,7 +141,11 @@ export const privateRoutes = [
   },
   {
     path: appPaths.STUDENT_COURSE,
-    element: <StudentLesson />,
+    element: <StudentCourse />,
+  },
+  {
+    path: `${appPaths.STUDENT_COURSE}/:courseId/lessons`,
+    element: <StudentCourse />,
   },
   {
     path: appPaths.PROFILE,

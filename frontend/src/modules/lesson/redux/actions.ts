@@ -7,9 +7,9 @@ import {
   apiUpdateLesson,
   apiGetCourses,
   apiDeleteLesson,
-  apiGetStudentLessons,
+  apiGetStudentCourses,
 } from "./services";
-import { setLesson, setCreateLesson, setStudentLessons } from "./slice";
+import { setLesson, setCreateLesson, setStudentCourse } from "./slice";
 import { COMPONENT_STAGES } from "../../base/utils";
 import {
   LessonState,
@@ -18,9 +18,9 @@ import {
   GetLessonParams,
   UpdateLessonParams,
   DeleteLessonParams,
-  GetStudentLessonsParams,
+  GetStudentCoursesParams,
 } from "../types";
-import { handleConvertLessons } from "./functions";
+import { handleConvertCourses } from "./functions";
 
 export const getLessons = createAsyncThunk(
   "lesson/getLessons",
@@ -193,27 +193,21 @@ export const deleteLesson = createAsyncThunk(
   }
 );
 
-export const getStudentLessons = createAsyncThunk(
-  "lesson/getStudentLessons",
-  async ({ studentId }: GetStudentLessonsParams, { dispatch }) => {
+export const getStudentCourses = createAsyncThunk(
+  "lesson/getStudentCourses",
+  async ({ studentId }: GetStudentCoursesParams, { dispatch }) => {
     try {
-      const res = await apiGetStudentLessons(studentId);
-      const data = handleConvertLessons(res?.data.lessons);
+      const res = await apiGetStudentCourses(studentId);
+      const data = handleConvertCourses(res?.data.lessons);
       dispatch(
-        setStudentLessons({
+        setStudentCourse({
           data,
-          state: COMPONENT_STAGES.SUCCESS,
-          currentPage: res?.data.currentPage,
-          totalPages: res?.data.totalPages,
         })
       );
     } catch {
       dispatch(
-        setStudentLessons({
-          state: COMPONENT_STAGES.FAIL,
+        setStudentCourse({
           data: [],
-          currentPage: 1,
-          totalPages: 0,
         })
       );
     }

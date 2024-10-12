@@ -16,43 +16,46 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useParams } from "react-router-dom";
 import {
   StudentCourseType,
-  StudentLesson,
+  StudentCourse,
   StudentLessonType,
 } from "../../types";
 
-interface LessonSidebarProps {
-  handleSelectedStudentLessons: (lesson: StudentLessonType[]) => void;
+interface CourseSidebarProps {
+  handleSelectedStudentCourses: (
+    lesson: StudentLessonType[],
+    courseId: string
+  ) => void;
 }
 
-const LessonSidebar = ({
-  handleSelectedStudentLessons,
-}: LessonSidebarProps) => {
-  const { lessonId } = useParams();
+const CourseSidebar = ({
+  handleSelectedStudentCourses,
+}: CourseSidebarProps) => {
+  const { courseId } = useParams();
 
   const {
-    studentLessons: { data: studentLessons },
+    studentCourse: { data: studentCourses },
   } = useAppSelector((state) => state.lesson);
 
   const [openClasses, setOpenClasses] = useState<Record<string, boolean>>({});
   const [searchCourses, setSearchCourses] = useState<string>("");
-  const [filteredData, setFilteredData] = useState<StudentLesson[]>([]);
+  const [filteredData, setFilteredData] = useState<StudentCourse[]>([]);
 
   useEffect(() => {
     if (searchCourses) {
-      const filteredData = studentLessons.filter((studentLesson) =>
+      const filteredData = studentCourses.filter((studentLesson) =>
         studentLesson.courses.some((course) =>
           course.title.toLowerCase().includes(searchCourses.toLowerCase())
         )
       );
       setFilteredData(filteredData);
     } else {
-      setFilteredData(studentLessons);
+      setFilteredData(studentCourses);
     }
-  }, [searchCourses, studentLessons]);
+  }, [searchCourses, studentCourses]);
 
   useEffect(() => {
-    setFilteredData(studentLessons);
-  }, [studentLessons]);
+    setFilteredData(studentCourses);
+  }, [studentCourses]);
 
   const handleToggle = (
     id: string,
@@ -68,8 +71,10 @@ const LessonSidebar = ({
         <ListItemButton
           key={course.id}
           sx={{ pl: 6 }}
-          onClick={() => handleSelectedStudentLessons(course.lessons)}
-          selected={course.id === lessonId}
+          onClick={() =>
+            handleSelectedStudentCourses(course.lessons, course.id)
+          }
+          selected={course.id === courseId}
         >
           <ListItemText primary={course.title} />
         </ListItemButton>
@@ -77,21 +82,18 @@ const LessonSidebar = ({
     </List>
   );
 
-  // useEffect(() => {
-  //   if (lessonId) {
-  //     studentLessons.forEach((studentLesson) => {
-  //       studentLesson.courses.forEach((course) => {
-  //         const matchingLesson = course.lessons.find(
-  //           (lesson) => lesson.id === lessonId
-  //         );
-  //         if (matchingLesson) {
-  //           setOpenClasses((prev) => ({ ...prev, [studentLesson.id]: true }));
-  //           setOpenCourses((prev) => ({ ...prev, [course.id]: true }));
-  //         }
-  //       });
-  //     });
-  //   }
-  // }, [lessonId, studentLessons]);
+  useEffect(() => {
+    if (courseId) {
+      studentCourses.forEach((studentLesson) => {
+        studentLesson.courses.forEach((course) => {
+          if (course.id === courseId) {
+            setOpenClasses((prev) => ({ ...prev, [studentLesson.id]: true }));
+            handleSelectedStudentCourses(course.lessons, course.id);
+          }
+        });
+      });
+    }
+  }, [courseId, studentCourses]);
 
   return (
     <Box
@@ -170,4 +172,4 @@ const LessonSidebar = ({
   );
 };
 
-export default LessonSidebar;
+export default CourseSidebar;
