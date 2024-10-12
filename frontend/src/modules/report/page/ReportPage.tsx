@@ -22,9 +22,6 @@ const ReportPage = () => {
   return (
     <Container maxWidth="lg">
       <Box my={4}>
-        <Typography variant="h4" mb={4} textAlign="center">
-          Teacher Dashboard
-        </Typography>
         <TotalInfo />
         <Grid container spacing={3}>
           <PointOfClass />

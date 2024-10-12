@@ -60,8 +60,8 @@ export const STUDENT_SIDEBAR = [
   },
   {
     id: 2,
-    name: "Lessons",
-    icon: <CastForEducationIcon />,
-    link: "/student/lessons",
+    name: "Subjects",
+    icon: <SubjectIcon />,
+    link: "/student/courses",
   },
 ];

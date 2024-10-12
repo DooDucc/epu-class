@@ -20,11 +20,18 @@ export type UpdateClassesParams = {
   handleFail: () => void;
 };
 
+export type DeleteClassParams = {
+  id: string;
+  handleSuccess: () => void;
+  handleFail: () => void;
+};
+
 export type GetClassesParams = {
   page?: number;
   limit?: number;
   search?: string;
   majorId?: string;
+  isLoading?: boolean;
 };
 
 export type GetClassParams = {

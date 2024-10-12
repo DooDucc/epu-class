@@ -110,7 +110,7 @@ const CreateLesson = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        mt: 5,
+        mt: 2,
         width: "100%",
       }}
     >

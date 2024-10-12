@@ -101,7 +101,7 @@ const StudentWrapper = () => {
   }
 
   return (
-    <Box sx={{ width: "100%", padding: 3, mt: 5 }}>
+    <Box sx={{ width: "100%", p: 3 }}>
       <Box
         sx={{
           display: "flex",
@@ -113,7 +113,7 @@ const StudentWrapper = () => {
         <Box
           sx={{ display: "flex", alignItems: "center", gap: 2, flexGrow: 1 }}
         >
-          <Typography variant="h5">Students in Teacher Classes</Typography>
+          <Typography variant="h5">Students joined classes</Typography>
           <TextField
             variant="outlined"
             label="Search by student code or name"

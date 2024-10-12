@@ -43,7 +43,6 @@ const StudentLesson = () => {
               justifyContent: "center",
               alignItems: "center",
               minHeight: "100vh",
-              pl: "320px",
             }}
           >
             <Typography variant="body1">Select a course to start</Typography>

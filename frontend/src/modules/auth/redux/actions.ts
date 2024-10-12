@@ -32,15 +32,30 @@ export const login = createAsyncThunk(
 export const register = createAsyncThunk(
   "auth/register",
   async (
-    { studentCode, email, password, handleSuccess, handleError }: LoginParams,
+    {
+      studentCode,
+      email,
+      password,
+      fullName,
+      phone,
+      className,
+      handleSuccess,
+      handleError,
+    }: LoginParams,
     { dispatch }
   ) => {
     try {
       let res;
       if (studentCode) {
-        res = await apiRegister({ studentCode, password });
+        res = await apiRegister({
+          studentCode,
+          password,
+          fullName,
+          phone,
+          className,
+        });
       } else {
-        res = await apiRegister({ email, password });
+        res = await apiRegister({ email, password, fullName, phone });
       }
 
       storage.set(AUTH_CONSTANTS.ACCESS_TOKEN, res?.data?.token);

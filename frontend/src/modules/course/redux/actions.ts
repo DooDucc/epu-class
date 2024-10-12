@@ -41,15 +41,17 @@ import { toast } from "react-toastify";
 export const getCourses = createAsyncThunk(
   "course/getCourses",
   async (
-    { page = 1, limit = 5, search = "" }: GetCoursesParams,
+    { page = 1, limit = 5, search = "", isLoading = false }: GetCoursesParams,
     { dispatch }
   ) => {
     try {
-      dispatch(
-        setCourse({
-          state: COMPONENT_STAGES.LOADING,
-        })
-      );
+      if (isLoading) {
+        dispatch(
+          setCourse({
+            state: COMPONENT_STAGES.LOADING,
+          })
+        );
+      }
 
       const res = await apiGetCourses({ page, limit, search });
 

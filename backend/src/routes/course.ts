@@ -21,4 +21,5 @@ courseRoutes.post("/", [authMiddleware], createCourse);
 courseRoutes.post("/:id/register", [authMiddleware], registerCourse);
 courseRoutes.patch("/:id", [authMiddleware], updateCourse);
 courseRoutes.delete("/:id", [authMiddleware], deleteCourse);
+
 export default courseRoutes;

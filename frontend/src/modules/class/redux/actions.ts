@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   apiCreateClass,
+  apiDeleteClass,
   apiGetClass,
   apiGetClasses,
   apiGetMajors,
@@ -14,6 +15,7 @@ import { COMPONENT_STAGES } from "../../base/utils";
 import {
   ClassState,
   CreateClassesParams,
+  DeleteClassParams,
   GetClassesParams,
   GetClassParams,
   JoinClassParams,
@@ -26,15 +28,17 @@ import { apiGetCourse } from "../../course/redux/services";
 export const getClasses = createAsyncThunk(
   "class/getClasses",
   async (
-    { page = 1, limit = 5, search = "" }: GetClassesParams,
+    { page = 1, limit = 5, search = "", isLoading = false }: GetClassesParams,
     { dispatch }
   ) => {
     try {
-      dispatch(
-        setClass({
-          state: COMPONENT_STAGES.LOADING,
-        })
-      );
+      if (isLoading) {
+        dispatch(
+          setClass({
+            state: COMPONENT_STAGES.LOADING,
+          })
+        );
+      }
 
       const res = await apiGetClasses({ page, limit, search });
 
@@ -215,6 +219,21 @@ export const updateClass = createAsyncThunk(
       handleSuccess();
     } catch (error) {
       console.log(error);
+      handleFail();
+    }
+  }
+);
+
+export const deleteClass = createAsyncThunk(
+  "class/deleteClass",
+  async (
+    { id, handleSuccess, handleFail }: DeleteClassParams,
+    { dispatch }
+  ) => {
+    try {
+      await apiDeleteClass(id);
+      handleSuccess();
+    } catch (error) {
       handleFail();
     }
   }

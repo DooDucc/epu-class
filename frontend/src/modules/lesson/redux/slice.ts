@@ -10,6 +10,7 @@ const initialState: LessonState = {
     state: COMPONENT_STAGES.LOADING,
     currentPage: 1,
     totalPages: 0,
+    searchTerm: "",
   },
   createLesson: {
     courses: [],
@@ -42,6 +43,7 @@ export const lessonSlice = createSlice({
         state?: string;
         currentPage?: number;
         totalPages?: number;
+        searchTerm?: string;
       }>
     ) => {
       state.lesson = {

@@ -67,7 +67,8 @@ export const login = async (req: Request, res: Response) => {
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, studentCode, fullName, phone, avatar, password } = req.body;
+    const { email, studentCode, fullName, phone, avatar, password, className } =
+      req.body;
 
     if (email) {
       const teacher = await prismaClient.teacher.findFirst({
@@ -123,6 +124,7 @@ export const register = async (req: Request, res: Response) => {
       const newStudent = await prismaClient.student.create({
         data: {
           studentCode,
+          class: className,
           password: hashSync(password, 10),
           userId: newUser?.id,
         },
@@ -171,4 +173,46 @@ export const me = async (req: Request, res: Response) => {
       res.json({ ...req.user, userId: student.userId, role: ROLE.STUDENT });
     }
   } catch (error) {}
+};
+
+export const updateUserProfile = async (req: Request, res: Response) => {
+  try {
+    const { fullName, phone, avatar, userId } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // First, check if the user exists
+    const existingUser = await prismaClient.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!existingUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // If the user exists, proceed with the update
+    const updatedUser = await prismaClient.user.update({
+      where: { id: userId },
+      data: {
+        fullName: fullName || undefined,
+        phone: phone || undefined,
+        avatar: avatar || undefined,
+      },
+    });
+
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        id: updatedUser.id,
+        fullName: updatedUser.fullName,
+        phone: updatedUser.phone,
+        avatar: updatedUser.avatar,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };

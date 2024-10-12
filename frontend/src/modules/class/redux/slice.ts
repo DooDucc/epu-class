@@ -11,6 +11,7 @@ const initialState: ClassState = {
     currentPage: 1,
     totalPages: 0,
     courses: [],
+    searchTerm: "",
   },
   createClass: {
     majors: [],
@@ -32,6 +33,7 @@ export const classSlice = createSlice({
         currentPage?: number;
         totalPages?: number;
         courses?: any[];
+        searchTerm?: string;
       }>
     ) => {
       state.class = {

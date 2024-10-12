@@ -19,11 +19,29 @@ interface Class {
   className: string;
 }
 
+interface Lesson {
+  id: string;
+  title: string;
+  userProgress: {
+    id: string;
+    lessonId: string;
+    studentId: string;
+    isCompleted: boolean;
+  }[];
+}
+
+interface Course {
+  id: string;
+  title: string;
+  lessons: Lesson[];
+}
+
 export interface Student {
   id: string;
   studentCode: string;
   user: User;
   classes: Class[];
+  courses: Course[];
 }
 
 export interface StudentDetailUser {
@@ -65,6 +83,7 @@ export interface StudentDetailCourse {
 export interface StudentDetail {
   id: string;
   studentCode: string;
+  class: string;
   user: StudentDetailUser;
   classes: StudentDetailClass[];
   courses: StudentDetailCourse[];

@@ -22,6 +22,9 @@ const Register = () => {
     role: ROLE.STUDENT,
     email: "",
     studentCode: "",
+    fullName: "",
+    className: "",
+    phone: "",
     password: "",
   });
 
@@ -31,13 +34,19 @@ const Register = () => {
 
     const email = data.get("email");
     const studentCode = data.get("studentCode");
+    const fullName = data.get("fullName");
+    const phone = data.get("phone");
     const password = data.get("password");
+    const className = data.get("className");
 
     dispatch(
       register({
         studentCode: studentCode?.toString() ?? "",
         email: email?.toString() ?? "",
         password: password?.toString() ?? "",
+        fullName: fullName?.toString() ?? "",
+        phone: phone?.toString() ?? "",
+        className: className?.toString() ?? "",
         handleSuccess: () => {
           toast.success("Register successfully");
         },
@@ -117,18 +126,33 @@ const Register = () => {
                 </RadioGroup>
               </FormControl>
               {values?.role === ROLE.STUDENT ? (
-                <FormControl>
-                  <FormLabel htmlFor="email">Student Code</FormLabel>
-                  <TextField
-                    type="text"
-                    name="studentCode"
-                    placeholder="Your code..."
-                    required
-                    fullWidth
-                    variant="outlined"
-                    onChange={(e) => handleInputChange(e)}
-                  />
-                </FormControl>
+                <>
+                  <FormControl>
+                    <FormLabel htmlFor="email">Student Code</FormLabel>
+                    <TextField
+                      type="text"
+                      name="studentCode"
+                      placeholder="Your code..."
+                      required
+                      fullWidth
+                      variant="outlined"
+                      onChange={(e) => handleInputChange(e)}
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel htmlFor="className">Class</FormLabel>
+                    <TextField
+                      type="text"
+                      name="className"
+                      placeholder="Your class..."
+                      required
+                      fullWidth
+                      variant="outlined"
+                      value={values.className}
+                      onChange={(e) => handleInputChange(e)}
+                    />
+                  </FormControl>
+                </>
               ) : (
                 <FormControl>
                   <FormLabel htmlFor="email">Email</FormLabel>
@@ -144,6 +168,32 @@ const Register = () => {
                   />
                 </FormControl>
               )}
+              <FormControl>
+                <FormLabel htmlFor="fullName">Full Name</FormLabel>
+                <TextField
+                  type="text"
+                  name="fullName"
+                  required
+                  fullWidth
+                  variant="outlined"
+                  value={values.fullName}
+                  placeholder="Your full name..."
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="phone">Phone</FormLabel>
+                <TextField
+                  type="text"
+                  name="phone"
+                  required
+                  fullWidth
+                  variant="outlined"
+                  value={values.phone}
+                  placeholder="Your phone number..."
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </FormControl>
               <FormControl>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <FormLabel htmlFor="password">Password</FormLabel>

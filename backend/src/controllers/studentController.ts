@@ -55,6 +55,22 @@ export const getStudentsInTeacherClasses = async (
             className: true,
           },
         },
+        courses: {
+          where: {
+            teacherId,
+          },
+          select: {
+            id: true,
+            title: true,
+            lessons: {
+              select: {
+                id: true,
+                title: true,
+                userProgress: true,
+              },
+            },
+          },
+        },
       },
       skip: offset,
       take: limitNumber,
@@ -78,6 +94,15 @@ export const getStudentsInTeacherClasses = async (
       classes: student.classes.map((cls) => ({
         classCode: cls.classCode,
         className: cls.className,
+      })),
+      courses: student.courses.map((course) => ({
+        id: course.id,
+        title: course.title,
+        lessons: course.lessons.map((lesson) => ({
+          id: lesson.id,
+          title: lesson.title,
+          userProgress: lesson.userProgress,
+        })),
       })),
     }));
 
@@ -166,6 +191,7 @@ export const getStudent = async (req: Request, res: Response) => {
       id: student.id,
       studentCode: student.studentCode,
       user: student.user,
+      class: student.class,
       classes: student.classes,
       courses: coursesWithProgress,
     };

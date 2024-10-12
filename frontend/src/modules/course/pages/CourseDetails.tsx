@@ -161,7 +161,6 @@ const CourseDetails = () => {
         sx={{
           flex: 1,
           p: 2,
-          pl: 0,
           overflowY: "auto",
           boxShadow: theme.shadows[3],
         }}

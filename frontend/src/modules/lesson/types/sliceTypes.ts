@@ -6,6 +6,7 @@ export type LessonState = {
     state: string;
     currentPage: number;
     totalPages: number;
+    searchTerm: string;
   };
   createLesson: {
     courses: CourseType[];

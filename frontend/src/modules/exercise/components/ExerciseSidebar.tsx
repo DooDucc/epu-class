@@ -99,7 +99,7 @@ const ExerciseSidebar = ({
         flexDirection: "column",
         height: "100%",
         position: "fixed",
-        top: 0,
+        top: 70,
         width: 300,
         minHeight: "100vh",
       }}

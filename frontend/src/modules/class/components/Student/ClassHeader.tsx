@@ -5,6 +5,11 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  SelectChangeEvent,
 } from "@mui/material";
 import React from "react";
 import { useAppSelector } from "../../../base";
@@ -26,8 +31,8 @@ const ClassHeader: React.FC<ClassHeaderProps> = ({
     createClass: { majors },
   } = useAppSelector((state) => state.class);
 
-  const handleMajorClick = (majorId: string) => {
-    setSelectedMajor(majorId === selectedMajor ? null : majorId);
+  const handleMajorChange = (event: SelectChangeEvent<string>) => {
+    setSelectedMajor(event.target.value as string);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,26 +48,41 @@ const ClassHeader: React.FC<ClassHeaderProps> = ({
         mb: 2,
       }}
     >
+      <Typography variant="h3" color="primary">
+        Classes
+      </Typography>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Typography variant="h6" color="primary">
-          Filter by major
-        </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {majors?.map((major) => (
-            <Chip
-              key={major.id}
-              label={major.name}
-              onClick={() => handleMajorClick(major.id)}
-              color={selectedMajor === major.id ? "primary" : "default"}
-              sx={{ cursor: "pointer" }}
-            />
-          ))}
-        </Box>
-      </Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Typography variant="h6" color="primary">
-          Search by class name
-        </Typography>
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel id="major-select-label">Major</InputLabel>
+          <Select
+            labelId="major-select-label"
+            id="major-select"
+            value={selectedMajor || ""}
+            label="Major"
+            onChange={handleMajorChange}
+            MenuProps={{
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "left",
+              },
+              transformOrigin: {
+                vertical: "top",
+                horizontal: "left",
+              },
+              PaperProps: {
+                style: {
+                  maxHeight: 200,
+                },
+              },
+            }}
+          >
+            {majors?.map((major) => (
+              <MenuItem key={major.id} value={major.id}>
+                {major.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           variant="outlined"
           size="small"
@@ -75,6 +95,10 @@ const ClassHeader: React.FC<ClassHeaderProps> = ({
                 <SearchIcon />
               </InputAdornment>
             ),
+            style: {
+              width: 300,
+              height: 54,
+            },
           }}
         />
       </Box>

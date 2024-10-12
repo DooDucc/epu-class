@@ -25,15 +25,17 @@ import { handleConvertLessons } from "./functions";
 export const getLessons = createAsyncThunk(
   "lesson/getLessons",
   async (
-    { page = 1, limit = 5, search = "" }: GetLessonsParams,
+    { page = 1, limit = 5, search = "", isLoading = false }: GetLessonsParams,
     { dispatch }
   ) => {
     try {
-      dispatch(
-        setLesson({
-          state: COMPONENT_STAGES.LOADING,
-        })
-      );
+      if (isLoading) {
+        dispatch(
+          setLesson({
+            state: COMPONENT_STAGES.LOADING,
+          })
+        );
+      }
 
       const res = await apiGetLessons({ page, limit, search });
 

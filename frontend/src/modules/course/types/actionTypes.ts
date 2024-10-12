@@ -12,6 +12,7 @@ export type GetCoursesParams = {
   page?: number;
   limit?: number;
   search?: string;
+  isLoading?: boolean;
 };
 
 export type GetCourseParams = {

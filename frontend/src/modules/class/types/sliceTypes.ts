@@ -6,6 +6,7 @@ export type ClassState = {
     currentPage: number;
     totalPages: number;
     courses: any[];
+    searchTerm: string;
   };
   createClass: {
     majors: Major[];

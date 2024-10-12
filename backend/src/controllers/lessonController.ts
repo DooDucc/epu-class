@@ -15,6 +15,7 @@ export const getLessons = async (req: Request, res: Response) => {
         ? {
             OR: [
               { title: { contains: search as string } },
+              { desc: { contains: search as string } },
               { course: { id: { contains: search as string } } },
               { id: { contains: search as string } },
             ],

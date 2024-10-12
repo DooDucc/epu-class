@@ -23,11 +23,27 @@ interface ClassResponse {
   className: string;
 }
 
+interface CourseResponse {
+  id: string;
+  title: string;
+  lessons: {
+    id: string;
+    title: string;
+    userProgress: {
+      id: string;
+      lessonId: string;
+      studentId: string;
+      isCompleted: boolean;
+    }[];
+  }[];
+}
+
 export interface StudentResponse {
   id: string;
   studentCode: string;
   user: UserResponse;
   classes: ClassResponse[];
+  courses: CourseResponse[];
 }
 
 export interface StudentUserResponse {
@@ -70,6 +86,7 @@ export interface GetStudentResponse {
   data: {
     id: string;
     studentCode: string;
+    class: string;
     user: StudentUserResponse;
     classes: StudentClassResponse[];
     courses: StudentCourseResponse[];

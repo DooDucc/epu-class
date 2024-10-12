@@ -93,7 +93,7 @@ const ChatSidebar = ({
         flexDirection: "column",
         height: "100%",
         position: "fixed",
-        top: 0,
+        top: 70,
         width: 300,
         minHeight: "100vh",
       }}
@@ -177,11 +177,21 @@ const ChatSidebar = ({
                         src={chat.student.user.avatar}
                       />
                     </ListItemAvatar>
-                    <ListItemText primary={chat.student.user.fullName} />
+                    <ListItemText
+                      primary={chat.student.user.fullName}
+                      sx={{
+                        "& .MuiListItemText-primary": {
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          maxWidth: "120px",
+                        },
+                      }}
+                    />
                   </ListItem>
                   <ListItem
                     alignItems="center"
-                    sx={{ cursor: "pointer", gap: "8px" }}
+                    sx={{ cursor: "pointer", gap: "8px", pt: 0 }}
                   >
                     <Typography variant="body1" color="text.secondary">
                       {isCurrentUser ? "You" : chat.student.user.fullName}:

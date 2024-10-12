@@ -15,6 +15,7 @@ export type GetLessonsParams = {
   page?: number;
   limit?: number;
   search?: string;
+  isLoading?: boolean;
 };
 
 export type GetLessonParams = {

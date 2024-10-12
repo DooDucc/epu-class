@@ -28,8 +28,6 @@ const CourseDetailsSidebar = ({
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        position: "sticky",
-        top: 0,
       }}
     >
       <Typography variant="h6" sx={{ p: 1, textAlign: "center", boxShadow: 3 }}>

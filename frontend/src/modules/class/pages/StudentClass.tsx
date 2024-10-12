@@ -115,10 +115,6 @@ const StudentClass = () => {
 
   return (
     <Box sx={{ p: 2, flex: 1 }}>
-      <Typography variant="h4" color="primary" mb={2}>
-        Student Classes
-      </Typography>
-
       <ClassHeader
         selectedMajor={selectedMajor}
         searchTerm={searchTerm}

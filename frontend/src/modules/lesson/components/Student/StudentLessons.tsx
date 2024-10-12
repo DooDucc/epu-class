@@ -17,7 +17,7 @@ const StudentLessons = ({ selectedStudentLessons }: StudentLessonsProps) => {
   };
 
   return (
-    <Box sx={{ padding: 2, pl: "320px" }}>
+    <Box sx={{ padding: 2 }}>
       <Grid container spacing={2}>
         {selectedStudentLessons.map((lesson, index) => {
           const isCompleted =

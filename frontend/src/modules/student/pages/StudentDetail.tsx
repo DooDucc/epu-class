@@ -36,7 +36,13 @@ const StudentDetail = () => {
 
   if (!currentStudent) return null;
 
-  const { user, studentCode, classes, courses } = currentStudent;
+  const {
+    user,
+    studentCode,
+    classes,
+    courses,
+    class: studentClass,
+  } = currentStudent;
 
   const handleClassClick = (cls: StudentDetailClass) => {
     setSelectedClass(cls);
@@ -53,36 +59,36 @@ const StudentDetail = () => {
 
   return (
     <Box sx={{ padding: 3, width: "100%" }}>
-      <Typography variant="h4" gutterBottom>
-        Student Details
-      </Typography>
       <Paper elevation={3} sx={{ padding: 3 }}>
         <Box>
-          <Grid container spacing={3}>
-            <Grid
-              item
-              xs={12}
-              md={4}
-              sx={{ display: "flex", justifyContent: "center" }}
-            >
-              <Avatar
-                src={user.avatar || undefined}
-                alt={user.fullName || ""}
-                sx={{ width: 200, height: 200 }}
-              />
-            </Grid>
-            <Grid item xs={12} md={8}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+              justifyContent: "center",
+            }}
+          >
+            <Avatar
+              src={user.avatar || undefined}
+              alt={user.fullName || ""}
+              sx={{ width: 200, height: 200 }}
+            />
+            <Box>
               <Typography variant="h5" gutterBottom>
                 {user.fullName}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
                 Student Code: {studentCode}
               </Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                Class: {studentClass}
+              </Typography>
               <Typography variant="body1" gutterBottom>
                 Phone: {user.phone || "N/A"}
               </Typography>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           <Box sx={{ mt: 3 }}>
             <Typography variant="h6" gutterBottom>

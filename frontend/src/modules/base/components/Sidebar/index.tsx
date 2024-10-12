@@ -7,60 +7,20 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
 } from "@mui/material";
-import { STUDENT_SIDEBAR, TEACHER_SIDEBAR } from "./sidebarItems";
-import { useNavigate } from "react-router-dom";
-import { appPaths } from "../../routes";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../redux/store";
-import { toggleTheme } from "../../redux/themeSlice";
-import { useState } from "react";
-import { logout } from "../../../auth/redux/slice";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../..";
 import { ROLE } from "../../../auth/utils";
-import { useLocation } from "react-router-dom";
+import { appPaths } from "../../routes";
+import { STUDENT_SIDEBAR, TEACHER_SIDEBAR } from "./sidebarItems";
 
 const drawerWidth = 180;
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
-  const mode = useSelector((state: RootState) => state.theme.mode);
-  const { user } = useSelector((state: RootState) => state.auth);
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleToggleTheme = () => {
-    dispatch(toggleTheme());
-  };
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleProfile = () => {
-    navigate(appPaths.PROFILE);
-    handleClose();
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
-    handleClose();
-    navigate(appPaths.SIGN_IN);
-  };
+  const { user } = useAppSelector((state) => state.auth);
 
   const RENDER_SIDEBAR =
     user?.role === ROLE.TEACHER ? TEACHER_SIDEBAR : STUDENT_SIDEBAR;
@@ -74,6 +34,7 @@ const Sidebar = () => {
             alignItems: "center",
             justifyContent: "center",
             padding: 2,
+            height: 70,
           }}
         >
           <Box
@@ -127,86 +88,6 @@ const Sidebar = () => {
           ))}
         </List>
       </Box>
-      <Box sx={{ marginTop: "auto" }}>
-        <Divider />
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-            onClick={handleClick}
-          >
-            <Avatar
-              alt={user?.fullName || "User"}
-              src={user?.avatar}
-              sx={{ width: 40, height: 40 }}
-            />
-            <Box
-              sx={{
-                ml: 1,
-                maxWidth: 100,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {user?.fullName || "User"}
-            </Box>
-          </Box>
-          <IconButton
-            onClick={handleToggleTheme}
-            color="inherit"
-            size="small"
-            sx={{
-              width: 40,
-              height: 40,
-            }}
-          >
-            {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
-        </Box>
-      </Box>
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        PaperProps={{
-          style: {
-            minWidth: "200px",
-            marginLeft: "8px",
-          },
-        }}
-      >
-        <MenuItem onClick={handleProfile}>
-          <ListItemIcon>
-            <AccountCircleIcon fontSize="small" />
-          </ListItemIcon>
-          Profile
-        </MenuItem>
-        <MenuItem onClick={handleLogout}>
-          <ListItemIcon>
-            <LogoutIcon fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Menu>
     </Box>
   );
 

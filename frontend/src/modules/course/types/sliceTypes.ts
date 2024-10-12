@@ -8,10 +8,11 @@ export type CourseState = {
     state: string;
     currentPage: number;
     totalPages: number;
+    searchTerm: string;
   };
   courseDetails: {
     note: string;
-    submittedExercise: SubmittedExerciseType;
+    submittedExercise: SubmittedExerciseType | null;
   };
   createCourse: {
     classes: Class[];

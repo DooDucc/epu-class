@@ -140,7 +140,7 @@ export const privateRoutes = [
     element: <CourseDetails />,
   },
   {
-    path: appPaths.STUDENT_LESSON,
+    path: appPaths.STUDENT_COURSE,
     element: <StudentLesson />,
   },
   {

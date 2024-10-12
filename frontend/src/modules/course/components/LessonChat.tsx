@@ -92,7 +92,7 @@ const LessonChat = ({ teacherId, studentId }: LessonChatProps) => {
       }}
     >
       <Typography variant="h6" gutterBottom>
-        Lesson Chats
+        Chats
       </Typography>
       <MessageList messages={messages} />
       <MessageInput chat={chat} />

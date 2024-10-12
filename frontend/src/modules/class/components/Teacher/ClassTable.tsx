@@ -104,7 +104,6 @@ const ClassTable: React.FC<ClassTableProps> = ({
                 Major
               </TableSortLabel>
             </TableCell>
-            <TableCell>Teacher</TableCell>
             <TableCell>
               <TableSortLabel
                 active={orderBy === "isPublished"}
@@ -147,15 +146,6 @@ const ClassTable: React.FC<ClassTableProps> = ({
                 </Box>
               </TableCell>
               <TableCell>{classItem.major.name}</TableCell>
-              <TableCell>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Avatar
-                    src={classItem?.teacher?.avatar}
-                    sx={{ marginRight: 1 }}
-                  />
-                  {classItem?.teacher?.fullName}
-                </Box>
-              </TableCell>
               <TableCell>
                 <Switch
                   checked={classItem.isPublished}

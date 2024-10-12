@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../base";
 import {
   Box,
@@ -14,7 +14,11 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
 import { useParams } from "react-router-dom";
-import { StudentCourseType, StudentLessonType } from "../../types";
+import {
+  StudentCourseType,
+  StudentLesson,
+  StudentLessonType,
+} from "../../types";
 
 interface LessonSidebarProps {
   handleSelectedStudentLessons: (lesson: StudentLessonType[]) => void;
@@ -30,7 +34,25 @@ const LessonSidebar = ({
   } = useAppSelector((state) => state.lesson);
 
   const [openClasses, setOpenClasses] = useState<Record<string, boolean>>({});
-  const [searchLessons, setSearchLessons] = useState<string>("");
+  const [searchCourses, setSearchCourses] = useState<string>("");
+  const [filteredData, setFilteredData] = useState<StudentLesson[]>([]);
+
+  useEffect(() => {
+    if (searchCourses) {
+      const filteredData = studentLessons.filter((studentLesson) =>
+        studentLesson.courses.some((course) =>
+          course.title.toLowerCase().includes(searchCourses.toLowerCase())
+        )
+      );
+      setFilteredData(filteredData);
+    } else {
+      setFilteredData(studentLessons);
+    }
+  }, [searchCourses, studentLessons]);
+
+  useEffect(() => {
+    setFilteredData(studentLessons);
+  }, [studentLessons]);
 
   const handleToggle = (
     id: string,
@@ -55,21 +77,21 @@ const LessonSidebar = ({
     </List>
   );
 
-  //   useEffect(() => {
-  //     if (lessonId) {
-  //       studentLessons.forEach((studentLesson) => {
-  //         studentLesson.courses.forEach((course) => {
-  //           const matchingLesson = course.lessons.find(
-  //             (lesson) => lesson.id === lessonId
-  //           );
-  //           if (matchingLesson) {
-  //             setOpenClasses((prev) => ({ ...prev, [studentLesson.id]: true }));
-  //             setOpenCourses((prev) => ({ ...prev, [course.id]: true }));
-  //           }
-  //         });
+  // useEffect(() => {
+  //   if (lessonId) {
+  //     studentLessons.forEach((studentLesson) => {
+  //       studentLesson.courses.forEach((course) => {
+  //         const matchingLesson = course.lessons.find(
+  //           (lesson) => lesson.id === lessonId
+  //         );
+  //         if (matchingLesson) {
+  //           setOpenClasses((prev) => ({ ...prev, [studentLesson.id]: true }));
+  //           setOpenCourses((prev) => ({ ...prev, [course.id]: true }));
+  //         }
   //       });
-  //     }
-  //   }, [lessonId, studentLessons]);
+  //     });
+  //   }
+  // }, [lessonId, studentLessons]);
 
   return (
     <Box
@@ -78,8 +100,6 @@ const LessonSidebar = ({
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        position: "fixed",
-        top: 0,
         width: 300,
         minHeight: "100vh",
       }}
@@ -97,9 +117,9 @@ const LessonSidebar = ({
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Search lessons..."
-            value={searchLessons}
-            onChange={(e) => setSearchLessons(e.target.value)}
+            placeholder="Search courses..."
+            value={searchCourses}
+            onChange={(e) => setSearchCourses(e.target.value)}
             size="small"
             InputProps={{
               startAdornment: (
@@ -118,7 +138,7 @@ const LessonSidebar = ({
             overflow: "auto",
           }}
         >
-          {studentLessons.map((studentLesson) => (
+          {filteredData.map((studentLesson) => (
             <Box
               key={studentLesson.id}
               sx={{ borderBottom: "1px solid #e0e0e0", boxShadow: 3 }}

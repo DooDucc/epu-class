@@ -43,6 +43,10 @@ export const apiUpdateClass = (data: UpdateClassAPIData) => {
   return authorizedApi.patch(`/classes/${data.id}`, data.body);
 };
 
+export const apiDeleteClass = (id: string) => {
+  return authorizedApi.delete(`/classes/${id}`);
+};
+
 export const apiGetMajors = (): Promise<MajorResponse> => {
   return authorizedApi.get(`/majors`);
 };
