@@ -58,27 +58,14 @@ export type LessonResponse = {
   createdAt: string;
   updatedAt: string;
   teacher: TeacherResponse;
-  course: CourseResponse;
   attachments: any[];
   exercises: any[];
+  class?: ClassResponse;
 };
 
 export type ClassResponse = {
   id: string;
   className: string;
-};
-
-export type CourseResponse = {
-  id: string;
-  title: string;
-  desc: string;
-  imageUrl: string;
-  isPublished: boolean;
-  teacherId: string;
-  classId: string;
-  createdAt: string;
-  updatedAt: string;
-  class?: ClassResponse;
 };
 
 export type TeacherResponse = {
@@ -113,7 +100,8 @@ export type StudentCourseResponse = {
   createdAt: string;
   updatedAt: string;
   userProgress: UserProgressResponse[];
-  course: CourseResponse;
+  classId: string;
+  class: ClassResponse;
 };
 
 export type GetStudentCoursesResponse = {

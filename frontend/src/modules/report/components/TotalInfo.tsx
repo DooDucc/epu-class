@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../../base";
 import { Grid, Paper, Typography, Box } from "@mui/material";
-import { School, Book, Class, People } from "@mui/icons-material";
+import { School, Class, People } from "@mui/icons-material";
 
 interface InfoCardProps {
   title: string;
@@ -42,12 +42,6 @@ const TotalInfo = () => {
       color: "primary.main",
     },
     {
-      title: "TOTAL COURSES",
-      value: totalInfo.data.courseCount,
-      icon: Book,
-      color: "success.main",
-    },
-    {
       title: "TOTAL LESSONS",
       value: totalInfo.data.lessonCount,
       icon: Class,
@@ -62,7 +56,15 @@ const TotalInfo = () => {
   ];
 
   return (
-    <Grid container xs={12} md={12} spacing={3} mb={3}>
+    <Grid
+      container
+      xs={12}
+      md={12}
+      spacing={3}
+      mb={3}
+      justifyContent="center"
+      alignItems="center"
+    >
       {infoCards.map((card, index) => (
         <Grid item xs={12} sm={6} md={3} key={index}>
           <InfoCard {...card} />

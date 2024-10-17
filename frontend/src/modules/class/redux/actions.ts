@@ -4,10 +4,11 @@ import {
   apiDeleteClass,
   apiGetClass,
   apiGetClasses,
-  apiGetMajors,
+  apiGetLessons,
   apiGetPublishedClasses,
   apiJoinClass,
   apiUpdateClass,
+  apiUpdateLessonPositions,
   apiUploadFile,
 } from "./services";
 import { setClass, setCreateClass } from "./slice";
@@ -20,10 +21,10 @@ import {
   GetClassParams,
   JoinClassParams,
   UpdateClassesParams,
+  UpdateLessonPositionsParams,
   UploadParams,
 } from "../types";
 import { toast } from "react-toastify";
-import { apiGetCourse } from "../../course/redux/services";
 
 export const getClasses = createAsyncThunk(
   "class/getClasses",
@@ -63,21 +64,14 @@ export const getClasses = createAsyncThunk(
 export const getPublishedClasses = createAsyncThunk(
   "class/getPublishedClasses",
   async (
-    { page = 1, limit = 9, search = "", majorId = "" }: GetClassesParams,
+    { page = 1, limit = 9, search = "" }: GetClassesParams,
     { dispatch }
   ) => {
     try {
-      dispatch(
-        setClass({
-          state: COMPONENT_STAGES.LOADING,
-        })
-      );
-
       const res = await apiGetPublishedClasses({
         page,
         limit,
         search,
-        majorId,
       });
 
       dispatch(
@@ -109,25 +103,15 @@ export const getClass = createAsyncThunk(
       );
       const res = await apiGetClass({ id });
 
-      if (isStudent) {
-        const coursesInClass = res?.data?.courses;
-        const courseInfos = await Promise.all(
-          coursesInClass.map((course: any) => apiGetCourse({ id: course.id }))
-        );
-        dispatch(
-          setClass({
-            updatingClass: res?.data,
-            courses: courseInfos?.map((course: any) => course.data),
-            state: COMPONENT_STAGES.SUCCESS,
-          })
-        );
-        return;
-      }
-
       dispatch(
         setClass({
           updatingClass: res?.data,
           state: COMPONENT_STAGES.SUCCESS,
+        })
+      );
+      dispatch(
+        setCreateClass({
+          lessons: res?.data.lessons,
         })
       );
     } catch (err: any) {
@@ -147,24 +131,24 @@ export const createClasses = createAsyncThunk(
       classCode,
       className,
       isPublished,
-      majorId,
       teacherId,
+      desc,
       thumbnailUrl,
       handleSuccess,
     }: CreateClassesParams,
     { dispatch }
   ) => {
     try {
-      await apiCreateClass({
+      const res = await apiCreateClass({
         classCode,
         className,
         isPublished,
-        majorId,
         teacherId,
         thumbnailUrl,
+        desc,
       });
 
-      handleSuccess();
+      handleSuccess(res?.data.id);
     } catch (error) {
       dispatch(
         setClass({
@@ -177,42 +161,27 @@ export const createClasses = createAsyncThunk(
 
 export const updateClass = createAsyncThunk(
   "class/updateClass",
-  async (
-    {
-      id,
-      classCode,
-      className,
-      isPublished,
-      majorId,
-      teacherId,
-      thumbnailUrl,
-      handleSuccess,
-      handleFail,
-    }: UpdateClassesParams,
-    { getState }
-  ) => {
+  async ({
+    id,
+    classCode,
+    className,
+    isPublished,
+    teacherId,
+    thumbnailUrl,
+    desc,
+    handleSuccess,
+    handleFail,
+  }: UpdateClassesParams) => {
     try {
-      const {
-        class: {
-          class: { data: classes },
-        },
-      } = getState() as { class: ClassState };
-      const currentClass = classes.find((cls) => cls.id === id);
-
-      if (!currentClass) {
-        toast.error("Class not found");
-        return;
-      }
-
       await apiUpdateClass({
         id,
         body: {
-          classCode: classCode ?? currentClass?.classCode,
-          className: className ?? currentClass?.className,
-          isPublished: isPublished ?? currentClass?.isPublished,
-          majorId: majorId ?? currentClass?.major.id,
-          teacherId: teacherId ?? currentClass?.teacherId,
-          thumbnailUrl: thumbnailUrl ?? currentClass?.thumbnail,
+          classCode,
+          className,
+          desc,
+          isPublished,
+          teacherId,
+          thumbnailUrl,
         },
       });
 
@@ -235,23 +204,6 @@ export const deleteClass = createAsyncThunk(
       handleSuccess();
     } catch (error) {
       handleFail();
-    }
-  }
-);
-
-export const getMajors = createAsyncThunk(
-  "class/getMajors",
-  async (_, { dispatch }) => {
-    try {
-      const res = await apiGetMajors();
-
-      dispatch(
-        setCreateClass({
-          majors: res?.data,
-        })
-      );
-    } catch (error) {
-      console.error("Error fetching majors:", error);
     }
   }
 );
@@ -284,6 +236,44 @@ export const joinClass = createAsyncThunk(
       handleSuccess();
     } catch (error: any) {
       handleFail(error?.response?.data?.error);
+    }
+  }
+);
+
+export const getLessons = createAsyncThunk(
+  "class/getLessons",
+  async ({ classId }: { classId: string }, { dispatch }) => {
+    try {
+      const res = await apiGetLessons({ classId });
+
+      dispatch(
+        setCreateClass({
+          lessons: res?.data.lessons,
+        })
+      );
+    } catch (error) {
+      dispatch(
+        setCreateClass({
+          lessons: [],
+        })
+      );
+    }
+  }
+);
+
+export const updateLessonPositions = createAsyncThunk(
+  "class/updateLessonPositions",
+  async ({
+    classId,
+    lessons,
+    handleSuccess,
+    handleFail,
+  }: UpdateLessonPositionsParams) => {
+    try {
+      await apiUpdateLessonPositions({ classId, lessons });
+      handleSuccess();
+    } catch (error) {
+      handleFail();
     }
   }
 );

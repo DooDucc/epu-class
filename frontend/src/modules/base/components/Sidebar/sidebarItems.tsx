@@ -1,5 +1,4 @@
 import SchoolIcon from "@mui/icons-material/School";
-import SubjectIcon from "@mui/icons-material/Subject";
 import CastForEducationIcon from "@mui/icons-material/CastForEducation";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
@@ -12,12 +11,6 @@ export const TEACHER_SIDEBAR = [
     name: "Classes",
     icon: <SchoolIcon />,
     link: "/teacher/classes",
-  },
-  {
-    id: 2,
-    name: "Subjects",
-    icon: <SubjectIcon />,
-    link: "/teacher/subjects",
   },
   {
     id: 3,
@@ -60,8 +53,8 @@ export const STUDENT_SIDEBAR = [
   },
   {
     id: 2,
-    name: "Subjects",
-    icon: <SubjectIcon />,
-    link: "/student/courses",
+    name: "Lessons",
+    icon: <CastForEducationIcon />,
+    link: "/student/lessons",
   },
 ];

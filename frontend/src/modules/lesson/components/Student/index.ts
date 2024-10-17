@@ -1,2 +1,2 @@
-export { default as CourseSidebar } from "./CourseSidebar";
+export { default as ClassSidebar } from "./ClassSidebar";
 export { default as StudentLessons } from "./StudentLessons";

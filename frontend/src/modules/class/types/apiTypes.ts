@@ -2,7 +2,6 @@ export type GetClassesAPIData = {
   page: number;
   limit: number;
   search: string;
-  majorId?: string;
 };
 
 export type GetClassAPIData = {
@@ -13,9 +12,9 @@ export type CreateClassAPIData = {
   classCode: string;
   className: string;
   isPublished: boolean;
-  majorId: string;
   teacherId: string;
   thumbnailUrl: string;
+  desc?: string;
 };
 
 export type UpdateClassAPIData = {
@@ -24,10 +23,14 @@ export type UpdateClassAPIData = {
     classCode?: string;
     className?: string;
     isPublished?: boolean;
-    majorId?: string;
+    desc?: string;
     teacherId?: string;
     thumbnailUrl?: string;
   };
+};
+
+export type GetLessonsAPIData = {
+  classId: string;
 };
 
 export type GetClassesResponse = {
@@ -52,12 +55,9 @@ export type ClassResponse = {
   teacherId: string;
   createdAt: string;
   updatedAt: string;
-  major: {
-    id: string;
-    name: string;
-  };
+  desc: string;
   teacher: TeacherResponse;
-  courses: any[]; // You might want to define a more specific type for courses
+  lessons: any[]; // You might want to define a more specific type for courses
   students: any[]; // You might want to define a more specific type for students
 };
 
@@ -71,9 +71,28 @@ export type TeacherResponse = {
   updatedAt: string;
 };
 
-export type MajorResponse = {
+export type GetLessonsResponse = {
   data: {
-    id: string;
-    name: string;
-  }[];
+    lessons: LessonResponse[];
+    currentPage: number;
+    totalPages: number;
+  };
+};
+
+export type LessonResponse = {
+  id: string;
+  title: string;
+  desc: string;
+  position: number;
+  isPublished: boolean;
+  videoUrl: string;
+  videoDuration: number;
+  courseId: string;
+  teacherId: string;
+  courseName: string;
+  createdAt: string;
+  updatedAt: string;
+  teacher: TeacherResponse;
+  attachments: any[];
+  exercises: any[];
 };

@@ -5,13 +5,16 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector, useSocket } from "../../base";
 import { ChatSidebar, SelectedLessonChat } from "../components";
 import "../index.css";
-import { ChatType } from "../types";
 import { setChats } from "../redux/slice";
+import { ChatType } from "../types";
 
 const Chats = () => {
   const dispatch = useAppDispatch();
 
-  const { lessonId: activeLessonId } = useParams<{ lessonId: string }>();
+  const { lessonId: activeLessonId, studentId } = useParams<{
+    lessonId: string;
+    studentId: string;
+  }>();
 
   const socket = useSocket();
 
@@ -47,18 +50,22 @@ const Chats = () => {
   }, [socket, user]);
 
   useEffect(() => {
-    if (activeLessonId) {
+    if (activeLessonId && studentId) {
       setSelectedLessonChat(
-        chats.find((chat) => chat.lessonId === activeLessonId) || null
+        chats.find(
+          (chat) =>
+            chat.lessonId === activeLessonId && chat.studentId === studentId
+        ) || null
       );
     }
-  }, [activeLessonId, chats]);
+  }, [activeLessonId, chats, studentId]);
 
   return (
     <Box sx={{ display: "flex", flex: 1, overflow: "hidden" }}>
       <ChatSidebar
         chats={chats}
         activeLessonId={activeLessonId || ""}
+        studentId={studentId || ""}
         setSelectedLessonChat={setSelectedLessonChat}
       />
       <Box

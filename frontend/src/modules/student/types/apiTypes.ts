@@ -59,6 +59,7 @@ export interface StudentClassResponse {
   classCode: string;
   className: string;
   thumbnail: string;
+  lessons: LessonResponse[];
 }
 
 export interface LessonResponse {

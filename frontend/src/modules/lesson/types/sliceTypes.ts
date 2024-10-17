@@ -1,3 +1,5 @@
+import { Class } from "../../class/types";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type LessonState = {
   lesson: {
@@ -9,7 +11,7 @@ export type LessonState = {
     searchTerm: string;
   };
   createLesson: {
-    courses: CourseType[];
+    classes: Class[];
     videoUrl: string;
     attachments: { name: string; url: string; type?: string }[];
     exercises: { name: string; url: string; type?: string }[];
@@ -19,8 +21,8 @@ export type LessonState = {
       exercise: string;
     };
   };
-  studentCourse: {
-    data: StudentCourse[];
+  studentLesson: {
+    data: StudentLesson[];
   };
 };
 
@@ -34,10 +36,8 @@ export type LessonType = {
   videoDuration: number;
   courseId: string;
   teacherId: string;
-  courseName: string;
   createdAt: string;
   updatedAt: string;
-  course: CourseType;
   userProgress?: UserProgressType[];
   attachments?: AttachmentType[];
   note?: any;
@@ -93,18 +93,17 @@ export type StudentLessonType = {
   videoUrl: string;
   videoDuration: number;
   userProgress: UserProgressType[];
-  courseId: string;
+  classId: string;
 };
 
 export type StudentCourseType = {
   id: string;
   title: string;
   classId: string;
-  lessons: StudentLessonType[];
 };
 
-export type StudentCourse = {
+export type StudentLesson = {
   id: string;
   className: string;
-  courses: StudentCourseType[];
+  lessons: StudentLessonType[];
 };

@@ -5,9 +5,9 @@ import {
   AmountOfStudents,
   Class,
   ClassExerciseStats,
-  Course,
-  CourseExerciseStats,
+  LessonExerciseStats,
   ReportState,
+  TopStudent,
   TotalInfo,
 } from "../types";
 
@@ -16,15 +16,7 @@ const initialState: ReportState = {
     data: [],
     state: COMPONENT_STAGES.LOADING,
   },
-  studentsByCourse: {
-    data: [],
-    state: COMPONENT_STAGES.LOADING,
-  },
-  submittedExerciseStats: {
-    data: [],
-    state: COMPONENT_STAGES.LOADING,
-  },
-  courseExerciseStats: {
+  lessonExerciseStats: {
     data: {
       totalSubmissions: 0,
       percentages: {
@@ -50,10 +42,6 @@ const initialState: ReportState = {
     data: [],
     state: COMPONENT_STAGES.LOADING,
   },
-  courses: {
-    data: [],
-    state: COMPONENT_STAGES.LOADING,
-  },
   lessons: {
     data: [],
     state: COMPONENT_STAGES.LOADING,
@@ -61,10 +49,13 @@ const initialState: ReportState = {
   totalInfo: {
     data: {
       classCount: 0,
-      courseCount: 0,
       lessonCount: 0,
       studentCount: 0,
     },
+    state: COMPONENT_STAGES.LOADING,
+  },
+  topStudentsByClass: {
+    data: [],
     state: COMPONENT_STAGES.LOADING,
   },
 };
@@ -85,36 +76,15 @@ export const reportSlice = createSlice({
         ...action.payload,
       };
     },
-    setStudentsByCourse: (
+    setLessonExerciseStats: (
       state,
       action: PayloadAction<{
-        data?: AmountOfStudents[];
+        data?: LessonExerciseStats;
         state?: string;
       }>
     ) => {
-      state.studentsByCourse = { ...state.studentsByCourse, ...action.payload };
-    },
-    setSubmittedExerciseStats: (
-      state,
-      action: PayloadAction<{
-        data?: any;
-        state?: string;
-      }>
-    ) => {
-      state.submittedExerciseStats = {
-        ...state.submittedExerciseStats,
-        ...action.payload,
-      };
-    },
-    setCourseExerciseStats: (
-      state,
-      action: PayloadAction<{
-        data?: CourseExerciseStats;
-        state?: string;
-      }>
-    ) => {
-      state.courseExerciseStats = {
-        ...state.courseExerciseStats,
+      state.lessonExerciseStats = {
+        ...state.lessonExerciseStats,
         ...action.payload,
       };
     },
@@ -139,14 +109,14 @@ export const reportSlice = createSlice({
     ) => {
       state.classes = { ...state.classes, ...action.payload };
     },
-    setCourses: (
+    setLessons: (
       state,
       action: PayloadAction<{
-        data?: Course[];
+        data?: { id: string; title: string }[];
         state?: string;
       }>
     ) => {
-      state.courses = { ...state.courses, ...action.payload };
+      state.lessons = { ...state.lessons, ...action.payload };
     },
     setTotalInfo: (
       state,
@@ -157,18 +127,29 @@ export const reportSlice = createSlice({
     ) => {
       state.totalInfo = { ...state.totalInfo, ...action.payload };
     },
+    setTopStudentsByClass: (
+      state,
+      action: PayloadAction<{
+        data?: TopStudent[];
+        state?: string;
+      }>
+    ) => {
+      state.topStudentsByClass = {
+        ...state.topStudentsByClass,
+        ...action.payload,
+      };
+    },
   },
 });
 
 export const {
   setStudentsByClass,
-  setStudentsByCourse,
-  setSubmittedExerciseStats,
-  setCourseExerciseStats,
+  setLessonExerciseStats,
   setClassExerciseStats,
   setClasses,
-  setCourses,
   setTotalInfo,
+  setLessons,
+  setTopStudentsByClass,
 } = reportSlice.actions;
 
 export default reportSlice.reducer;

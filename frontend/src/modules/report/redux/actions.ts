@@ -2,31 +2,28 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   apiGetClasses,
   apiGetClassExerciseStats,
-  apiGetCourseExerciseStats,
-  apiGetCourses,
-  apiGetStudentsByCourseAndYear,
+  apiGetLessonExerciseStats,
   apiGetStudentsByYear,
-  apiGetSubmittedExerciseStats,
+  apiGetTopStudentsByClass,
   apiGetTotalInfo,
 } from "./services";
 import {
   setClasses,
   setClassExerciseStats,
-  setCourseExerciseStats,
-  setCourses,
+  setLessonExerciseStats,
+  setLessons,
   setStudentsByClass,
-  setStudentsByCourse,
-  setSubmittedExerciseStats,
+  setTopStudentsByClass,
   setTotalInfo,
 } from "./slice";
 import { COMPONENT_STAGES } from "../../base";
 import {
   GetClassExerciseStatsParams,
-  GetCourseExerciseStatsParams,
+  GetLessonExerciseStatsParams,
   GetStudentsByClassParams,
-  GetStudentsByCourseParams,
-  GetSubmittedExerciseStatsParams,
+  GetTopStudentsByClassParams,
 } from "../types";
+import { apiGetLessons } from "../../lesson/redux/services";
 
 export const getStudentsByClass = createAsyncThunk(
   "report/getStudentsByClass",
@@ -57,78 +54,20 @@ export const getStudentsByClass = createAsyncThunk(
   }
 );
 
-export const getStudentsByCourse = createAsyncThunk(
-  "report/getStudentsByCourse",
-  async ({ courseId, year }: GetStudentsByCourseParams, { dispatch }) => {
+export const getLessonExerciseStats = createAsyncThunk(
+  "report/getLessonExerciseStats",
+  async ({ lessonId }: GetLessonExerciseStatsParams, { dispatch }) => {
     try {
       dispatch(
-        setStudentsByCourse({
+        setLessonExerciseStats({
           state: COMPONENT_STAGES.LOADING,
         })
       );
 
-      const res = await apiGetStudentsByCourseAndYear(courseId, year);
+      const res = await apiGetLessonExerciseStats(lessonId);
 
       dispatch(
-        setStudentsByCourse({
-          data: res?.data,
-          state: COMPONENT_STAGES.SUCCESS,
-        })
-      );
-    } catch {
-      dispatch(
-        setStudentsByCourse({
-          data: [],
-          state: COMPONENT_STAGES.FAIL,
-        })
-      );
-    }
-  }
-);
-
-export const getSubmittedExerciseStats = createAsyncThunk(
-  "report/getSubmittedExerciseStats",
-  async ({ lessonId }: GetSubmittedExerciseStatsParams, { dispatch }) => {
-    try {
-      dispatch(
-        setSubmittedExerciseStats({
-          state: COMPONENT_STAGES.LOADING,
-        })
-      );
-
-      const res = await apiGetSubmittedExerciseStats(lessonId);
-
-      dispatch(
-        setSubmittedExerciseStats({
-          data: res?.data,
-          state: COMPONENT_STAGES.SUCCESS,
-        })
-      );
-    } catch {
-      dispatch(
-        setSubmittedExerciseStats({
-          data: [],
-          state: COMPONENT_STAGES.FAIL,
-        })
-      );
-    }
-  }
-);
-
-export const getCourseExerciseStats = createAsyncThunk(
-  "report/getCourseExerciseStats",
-  async ({ courseId }: GetCourseExerciseStatsParams, { dispatch }) => {
-    try {
-      dispatch(
-        setCourseExerciseStats({
-          state: COMPONENT_STAGES.LOADING,
-        })
-      );
-
-      const res = await apiGetCourseExerciseStats(courseId);
-
-      dispatch(
-        setCourseExerciseStats({
+        setLessonExerciseStats({
           data: {
             totalSubmissions: res?.data?.totalSubmissions,
             percentages: res?.data?.percentages,
@@ -138,7 +77,7 @@ export const getCourseExerciseStats = createAsyncThunk(
       );
     } catch {
       dispatch(
-        setCourseExerciseStats({
+        setLessonExerciseStats({
           data: {
             totalSubmissions: 0,
             percentages: {
@@ -222,27 +161,30 @@ export const getClasses = createAsyncThunk(
   }
 );
 
-export const getCourses = createAsyncThunk(
-  "report/getCourses",
+export const getLessons = createAsyncThunk(
+  "report/getLessons",
   async (_, { dispatch }) => {
     try {
       dispatch(
-        setCourses({
+        setLessons({
           state: COMPONENT_STAGES.LOADING,
         })
       );
 
-      const res = await apiGetCourses();
+      const res = await apiGetLessons({ page: 1, limit: 100, search: "" });
 
       dispatch(
-        setCourses({
-          data: res?.data?.courses,
+        setLessons({
+          data: res?.data?.lessons.map((lesson) => ({
+            id: lesson.id,
+            title: lesson.title,
+          })),
           state: COMPONENT_STAGES.SUCCESS,
         })
       );
     } catch {
       dispatch(
-        setCourses({
+        setLessons({
           data: [],
           state: COMPONENT_STAGES.FAIL,
         })
@@ -274,10 +216,38 @@ export const getTotalInfo = createAsyncThunk(
         setTotalInfo({
           data: {
             classCount: 0,
-            courseCount: 0,
             lessonCount: 0,
             studentCount: 0,
           },
+          state: COMPONENT_STAGES.FAIL,
+        })
+      );
+    }
+  }
+);
+
+export const getTopStudentsByClass = createAsyncThunk(
+  "report/getTopStudentsByClass",
+  async ({ classId }: GetTopStudentsByClassParams, { dispatch }) => {
+    try {
+      dispatch(
+        setTopStudentsByClass({
+          state: COMPONENT_STAGES.LOADING,
+        })
+      );
+
+      const res = await apiGetTopStudentsByClass(classId);
+
+      dispatch(
+        setTopStudentsByClass({
+          data: res?.data,
+          state: COMPONENT_STAGES.SUCCESS,
+        })
+      );
+    } catch {
+      dispatch(
+        setTopStudentsByClass({
+          data: [],
           state: COMPONENT_STAGES.FAIL,
         })
       );

@@ -62,29 +62,12 @@ export const getSubmittedExercises = async (req: Request, res: Response) => {
       select: {
         id: true,
         title: true,
-        courseId: true,
-      },
-    });
-
-    // Get unique courseIds from lessons
-    const courseIds = [...new Set(lessons.map((lesson) => lesson.courseId))];
-
-    // Fetch courses separately
-    const courses = await prismaClient.course.findMany({
-      where: {
-        id: {
-          in: courseIds,
-        },
-      },
-      select: {
-        id: true,
-        title: true,
         classId: true,
       },
     });
 
     // Get unique classIds from courses
-    const classIds = [...new Set(courses.map((course) => course.classId))];
+    const classIds = [...new Set(lessons.map((lesson) => lesson.classId))];
 
     // Fetch classes separately
     const classes = await prismaClient.class.findMany({
@@ -99,31 +82,22 @@ export const getSubmittedExercises = async (req: Request, res: Response) => {
       },
     });
 
-    // Combine courses with class information
-    const coursesWithClasses = courses.map((course) => ({
-      ...course,
-      class: classes.find((cls) => cls.id === course.classId),
-    }));
-
-    // Combine lessons with course and class information
-    const lessonsWithCoursesAndClasses = lessons.map((lesson) => ({
+    const lessonsWithClasses = lessons.map((lesson) => ({
       ...lesson,
-      course: coursesWithClasses.find(
-        (course) => course.id === lesson.courseId
-      ),
+      class: classes.find((cls) => cls.id === lesson.classId),
     }));
 
-    // Combine submittedExercises with lesson, course, and class information
-    const exercisesWithLessonsCoursesAndClasses = submittedExercises.map(
+    // Combine submittedExercises with lesson class information
+    const exercisesWithLessonsAndClasses = submittedExercises.map(
       (exercise) => ({
         ...exercise,
-        lesson: lessonsWithCoursesAndClasses.find(
+        lesson: lessonsWithClasses.find(
           (lesson) => lesson.id === exercise.lessonId
         ),
       })
     );
 
-    return res.status(200).json(exercisesWithLessonsCoursesAndClasses);
+    return res.status(200).json(exercisesWithLessonsAndClasses);
   } catch (error) {
     console.error("Error fetching submitted exercises:", error);
     return res.status(500).json({ error: "Internal server error" });

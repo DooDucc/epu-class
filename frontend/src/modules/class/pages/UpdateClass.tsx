@@ -3,12 +3,8 @@ import {
   Button,
   Checkbox,
   Container,
-  FormControl,
   FormControlLabel,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,8 +13,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { appPaths, useAppDispatch, useAppSelector } from "../../base";
 import { COMPONENT_STAGES } from "../../base/utils";
-import { ClassThumbnail } from "../components";
-import { getClass, getMajors, updateClass } from "../redux/actions";
+import { ClassLessons, ClassThumbnail } from "../components";
+import { getClass, updateClass } from "../redux/actions";
 import { setCreateClass } from "../redux/slice";
 
 const UpdateClass = () => {
@@ -27,7 +23,7 @@ const UpdateClass = () => {
   const { id } = useParams<{ id: string }>();
 
   const {
-    createClass: { majors, thumbnail },
+    createClass: { thumbnail },
     class: { updatingClass },
   } = useAppSelector((state) => state.class);
 
@@ -35,13 +31,12 @@ const UpdateClass = () => {
   const [className, setClassName] = useState("");
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [isPublished, setIsPublished] = useState(false);
-  const [majorId, setMajorId] = useState("");
+  const [desc, setDesc] = useState("");
 
   useEffect(() => {
     if (id) {
       dispatch(getClass({ id }));
     }
-    dispatch(getMajors());
   }, [id]);
 
   useEffect(() => {
@@ -49,8 +44,7 @@ const UpdateClass = () => {
       setClassCode(updatingClass.classCode);
       setClassName(updatingClass.className);
       setIsPublished(updatingClass.isPublished);
-      setMajorId(updatingClass.majorId);
-
+      setDesc(updatingClass.desc);
       dispatch(
         setCreateClass({
           uploadState: updatingClass.thumbnail ? COMPONENT_STAGES.SUCCESS : "",
@@ -88,9 +82,9 @@ const UpdateClass = () => {
           id,
           classCode,
           className,
+          desc,
           isPublished,
           thumbnailUrl: thumbnail,
-          majorId,
           handleSuccess: () => {
             toast.success("Class is updated successfully");
             navigate(appPaths.TEACHER_CLASS);
@@ -126,14 +120,26 @@ const UpdateClass = () => {
           <Typography variant="h4" component="h1">
             Update Class
           </Typography>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            form="update-class-form"
-          >
-            Update Class
-          </Button>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isPublished}
+                  onChange={(e) => setIsPublished(e.target.checked)}
+                />
+              }
+              label="Published"
+              sx={{ mr: 2 }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              form="update-class-form"
+            >
+              Update Class
+            </Button>
+          </Box>
         </Box>
         <Box
           component="form"
@@ -161,30 +167,16 @@ const UpdateClass = () => {
                 onChange={(e) => setClassName(e.target.value)}
                 required
               />
-              <FormControl fullWidth margin="normal">
-                <InputLabel id="major-select-label">Major</InputLabel>
-                <Select
-                  labelId="major-select-label"
-                  value={majorId}
-                  onChange={(e) => setMajorId(e.target.value)}
-                  label="Major"
-                >
-                  {majors.map((major) => (
-                    <MenuItem key={major.id} value={major.id}>
-                      {major.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isPublished}
-                    onChange={(e) => setIsPublished(e.target.checked)}
-                  />
-                }
-                label="Published"
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Description"
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                multiline
+                rows={3}
               />
+              <ClassLessons classId={id || ""} />
             </Grid>
             <Grid item xs={12} md={6}>
               <ClassThumbnail

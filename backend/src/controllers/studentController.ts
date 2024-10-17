@@ -53,15 +53,6 @@ export const getStudentsInTeacherClasses = async (
           select: {
             classCode: true,
             className: true,
-          },
-        },
-        courses: {
-          where: {
-            teacherId,
-          },
-          select: {
-            id: true,
-            title: true,
             lessons: {
               select: {
                 id: true,
@@ -94,11 +85,7 @@ export const getStudentsInTeacherClasses = async (
       classes: student.classes.map((cls) => ({
         classCode: cls.classCode,
         className: cls.className,
-      })),
-      courses: student.courses.map((course) => ({
-        id: course.id,
-        title: course.title,
-        lessons: course.lessons.map((lesson) => ({
+        lessons: cls.lessons.map((lesson) => ({
           id: lesson.id,
           title: lesson.title,
           userProgress: lesson.userProgress,
@@ -144,15 +131,6 @@ export const getStudent = async (req: Request, res: Response) => {
             classCode: true,
             className: true,
             thumbnail: true,
-          },
-        },
-        courses: {
-          select: {
-            id: true,
-            title: true,
-            desc: true,
-            imageUrl: true,
-            classId: true,
             lessons: {
               select: {
                 id: true,
@@ -179,9 +157,9 @@ export const getStudent = async (req: Request, res: Response) => {
     }
 
     // Restructure the data to include progress information directly in lessons
-    const coursesWithProgress = student.courses.map((course) => ({
-      ...course,
-      lessons: course.lessons.map((lesson) => ({
+    const classesWithProgress = student.classes.map((cls) => ({
+      ...cls,
+      lessons: cls.lessons.map((lesson) => ({
         ...lesson,
         isCompleted: lesson.userProgress[0]?.isCompleted || false,
       })),
@@ -190,10 +168,11 @@ export const getStudent = async (req: Request, res: Response) => {
     const response = {
       id: student.id,
       studentCode: student.studentCode,
-      user: student.user,
-      class: student.class,
-      classes: student.classes,
-      courses: coursesWithProgress,
+      user: {
+        ...student.user,
+        class: student.class,
+      },
+      classes: classesWithProgress,
     };
 
     res.status(200).json(response);
@@ -231,18 +210,18 @@ export const deleteStudentFromClass = async (req: Request, res: Response) => {
       });
     }
 
-    // Get courses in the class
-    const coursesInClass = await prismaClient.course.findMany({
+    // Get classes
+    const classes = await prismaClient.class.findMany({
       // @ts-ignore
       where: { teacherId: req.user.id },
       select: { id: true },
     });
 
-    const courseIds = coursesInClass.map((course) => course.id);
+    const classIds = classes.map((cls) => cls.id);
 
-    for (const courseId of courseIds) {
-      await prismaClient.course.update({
-        where: { id: courseId },
+    for (const classId of classIds) {
+      await prismaClient.class.update({
+        where: { id: classId },
         data: {
           students: {
             disconnect: { id: studentId },
@@ -251,21 +230,19 @@ export const deleteStudentFromClass = async (req: Request, res: Response) => {
       });
     }
 
-    // Remove student's progress for lessons in the courses
+    // Remove student's progress for lessons in the classes
     await prismaClient.userProgress.deleteMany({
       where: {
         studentId,
         lesson: {
-          course: {
-            id: { in: courseIds },
+          class: {
+            id: { in: classIds },
           },
         },
       },
     });
 
-    return res
-      .status(200)
-      .json({ message: "Student removed from class and associated courses" });
+    return res.status(200).json({ message: "Student removed from class" });
   } catch (error) {
     console.error("Error deleting student from class:", error);
     return res.status(500).json({ message: "Internal server error" });

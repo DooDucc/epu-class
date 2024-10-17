@@ -5,11 +5,11 @@ import {
   apiGetLesson,
   apiCreateLesson,
   apiUpdateLesson,
-  apiGetCourses,
   apiDeleteLesson,
-  apiGetStudentCourses,
+  apiGetStudentLessons,
+  apiGetClasses,
 } from "./services";
-import { setLesson, setCreateLesson, setStudentCourse } from "./slice";
+import { setLesson, setCreateLesson, setStudentLesson } from "./slice";
 import { COMPONENT_STAGES } from "../../base/utils";
 import {
   LessonState,
@@ -18,9 +18,9 @@ import {
   GetLessonParams,
   UpdateLessonParams,
   DeleteLessonParams,
-  GetStudentCoursesParams,
+  GetStudentLessonsParams,
 } from "../types";
-import { handleConvertCourses } from "./functions";
+import { handleConvertLessonsOfClass } from "./functions";
 
 export const getLessons = createAsyncThunk(
   "lesson/getLessons",
@@ -41,10 +41,7 @@ export const getLessons = createAsyncThunk(
 
       dispatch(
         setLesson({
-          data: res?.data.lessons?.map((lesson) => ({
-            ...lesson,
-            courseName: lesson?.course?.title,
-          })),
+          data: res?.data.lessons,
           currentPage: res?.data.currentPage,
           totalPages: res?.data.totalPages,
           state: COMPONENT_STAGES.SUCCESS,
@@ -82,7 +79,7 @@ export const createLesson = createAsyncThunk(
       desc,
       isPublished,
       videoUrl,
-      courseId,
+      classId,
       exercises,
       attachments,
       videoDuration,
@@ -96,7 +93,7 @@ export const createLesson = createAsyncThunk(
         desc,
         isPublished,
         videoUrl,
-        courseId,
+        classId,
         exercises,
         attachments,
         videoDuration,
@@ -123,7 +120,7 @@ export const updateLesson = createAsyncThunk(
       position,
       isPublished,
       videoUrl,
-      courseId,
+      classId,
       videoDuration,
       handleSuccess,
       handleFail,
@@ -141,13 +138,13 @@ export const updateLesson = createAsyncThunk(
       await apiUpdateLesson({
         id,
         body: {
-          title: title ?? updatingLesson?.title,
-          desc: desc ?? updatingLesson?.desc,
-          isPublished: isPublished ?? updatingLesson?.isPublished,
-          videoUrl: videoUrl ?? updatingLesson?.videoUrl,
-          courseId: courseId ?? updatingLesson?.course?.id,
-          position: position ?? updatingLesson?.position,
-          exercises: exercises ?? updatingLesson?.exercises,
+          title,
+          desc,
+          isPublished,
+          videoUrl,
+          classId,
+          position,
+          exercises,
           attachments: attachments ?? updatingLesson?.attachments,
           videoDuration: videoDuration ?? updatingLesson?.videoDuration,
         },
@@ -164,17 +161,17 @@ export const getClasses = createAsyncThunk(
   "lesson/getClasses",
   async (_, { dispatch }) => {
     try {
-      const res = await apiGetCourses();
+      const res = await apiGetClasses();
 
       dispatch(
         setCreateLesson({
-          courses: res?.data.courses,
+          classes: res?.data.classes,
         })
       );
     } catch {
       dispatch(
         setCreateLesson({
-          courses: [],
+          classes: [],
         })
       );
     }
@@ -193,20 +190,21 @@ export const deleteLesson = createAsyncThunk(
   }
 );
 
-export const getStudentCourses = createAsyncThunk(
-  "lesson/getStudentCourses",
-  async ({ studentId }: GetStudentCoursesParams, { dispatch }) => {
+export const getStudentLessons = createAsyncThunk(
+  "lesson/getStudentLessons",
+  async ({ studentId }: GetStudentLessonsParams, { dispatch }) => {
     try {
-      const res = await apiGetStudentCourses(studentId);
-      const data = handleConvertCourses(res?.data.lessons);
+      const res = await apiGetStudentLessons(studentId);
+      const data = handleConvertLessonsOfClass(res?.data.lessons);
       dispatch(
-        setStudentCourse({
+        setStudentLesson({
           data,
         })
       );
-    } catch {
+    } catch (error) {
+      console.log(error);
       dispatch(
-        setStudentCourse({
+        setStudentLesson({
           data: [],
         })
       );

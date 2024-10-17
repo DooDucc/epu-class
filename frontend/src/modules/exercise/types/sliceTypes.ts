@@ -27,15 +27,8 @@ export type Lesson = {
   exercisesSubmitted: ExerciseItem[];
 };
 
-export type Course = {
-  id: string;
-  title: string;
-  classId: string;
-  lessons: Lesson[];
-};
-
 export type Exercise = {
   id: string;
   className: string;
-  courses: Course[];
+  lessons: Lesson[];
 };

@@ -19,12 +19,14 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { appPaths, useAppDispatch, useAppSelector } from "../../base";
 import { getCourse, registerCourse } from "../redux/actions";
 import { setCourse } from "../redux/slice";
+import ClassCodeModal from "../components/ClassCodeModal";
+import { joinClass } from "../../class/redux/actions";
 
 const CourseReview = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +37,8 @@ const CourseReview = () => {
     course: { updatingCourse },
   } = useAppSelector((state) => state.course);
   const { user } = useAppSelector((state) => state.auth);
+
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -79,21 +83,25 @@ const CourseReview = () => {
     }
   };
 
-  const handleRegister = () => {
-    if (id) {
-      dispatch(
-        registerCourse({
-          id,
-          body: { userId: user?.id || "" },
-          handleSuccess: () => {
-            navigate(`${appPaths.STUDENT_COURSE}/${id}`);
-          },
-          handleFail: () => {
-            toast.error("Failed to register for course");
-          },
-        })
-      );
-    }
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleRegister = (classCode: string) => {
+    dispatch(
+      joinClass({
+        classCode,
+        userId: user?.id || "",
+        handleSuccess: () => {
+          navigate(`${appPaths.STUDENT_CLASS}/${id}`);
+          toast.success("Joined class successfully");
+        },
+        handleFail: (errorMessage) => {
+          toast.error(errorMessage);
+        },
+      })
+    );
+    handleModalClose();
   };
 
   return (
@@ -102,17 +110,24 @@ const CourseReview = () => {
         <Grid item xs={12} md={8}>
           <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
             <Typography variant="h4" gutterBottom>
-              {updatingCourse.title}
+              {updatingCourse.className}
             </Typography>
             <Typography variant="body1">{updatingCourse.desc}</Typography>
           </Paper>
 
           <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom>
-              Course Content
+              Class Content
             </Typography>
             <Box display="flex" alignItems="center" gap={1}>
-              <Typography>{updatingCourse?.lessons?.length} lessons</Typography>
+              <Typography>
+                {
+                  updatingCourse?.lessons?.filter(
+                    (lesson) => lesson.isPublished
+                  )?.length
+                }{" "}
+                lessons
+              </Typography>
               <Typography>-</Typography>
               <Typography>
                 Duration{" "}
@@ -128,22 +143,24 @@ const CourseReview = () => {
               </Typography>
             </Box>
             <List>
-              {updatingCourse?.lessons.map((lesson, lessonIndex: number) => (
-                <ListItem key={lessonIndex} divider>
-                  <ListItemIcon>
-                    <PlayCircleOutline />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={lesson.title}
-                    secondary={lesson.desc}
-                  />
-                  <ListItemSecondaryAction>
-                    <Typography variant="body2" color="textSecondary">
-                      {formatDuration(lesson.videoDuration)}
-                    </Typography>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
+              {updatingCourse?.lessons
+                .filter((lesson) => lesson.isPublished)
+                .map((lesson, lessonIndex: number) => (
+                  <ListItem key={lessonIndex} divider>
+                    <ListItemIcon>
+                      <PlayCircleOutline />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={lesson.title}
+                      secondary={lesson.desc}
+                    />
+                    <ListItemSecondaryAction>
+                      <Typography variant="body2" color="textSecondary">
+                        {formatDuration(lesson.videoDuration)}
+                      </Typography>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
             </List>
           </Paper>
         </Grid>
@@ -172,7 +189,11 @@ const CourseReview = () => {
                   <VideoLibrary />
                 </ListItemIcon>
                 <ListItemText
-                  primary={`Total ${updatingCourse?.lessons?.length} lessons`}
+                  primary={`Total ${
+                    updatingCourse?.lessons?.filter(
+                      (lesson) => lesson.isPublished
+                    )?.length
+                  } lessons`}
                 />
               </ListItem>
               <ListItem>
@@ -203,13 +224,19 @@ const CourseReview = () => {
               color="primary"
               fullWidth
               sx={{ mb: 2 }}
-              onClick={handleRegister}
+              onClick={() => setModalOpen(true)}
             >
               Register to learn
             </Button>
           </Paper>
         </Grid>
       </Grid>
+      <ClassCodeModal
+        open={modalOpen}
+        onClose={handleModalClose}
+        onSubmit={handleRegister}
+        className={updatingCourse?.className || ""}
+      />
     </Box>
   );
 };

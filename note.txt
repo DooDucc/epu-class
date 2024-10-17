@@ -1,4 +1,0 @@
-- Tổng sinh viên của các lớp theo tgian (tháng) 
-- Tổng sinh viên của các môn theo tgian (tháng) 
-- Tỉ lệ điểm bài tập (theo bài học, môn học, lớp học)
-- Top sinh viên điểm cao (theo lớp học, môn học, bài học)

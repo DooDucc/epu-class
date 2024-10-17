@@ -4,7 +4,7 @@ export type CreateLessonParams = {
   isPublished?: boolean;
   videoUrl?: string;
   videoDuration?: number;
-  courseId: string;
+  classId: string;
   exercises?: { name: string; url: string }[];
   attachments?: { name: string; url: string }[];
   handleSuccess: () => void;
@@ -36,12 +36,12 @@ export type UpdateLessonParams = {
   isPublished?: boolean;
   videoUrl?: string;
   videoDuration?: number;
-  courseId?: string;
+  classId?: string;
   notes?: { content: string; studentId: string }[];
   handleSuccess: () => void;
   handleFail: () => void;
 };
 
-export type GetStudentCoursesParams = {
+export type GetStudentLessonsParams = {
   studentId: string;
 };

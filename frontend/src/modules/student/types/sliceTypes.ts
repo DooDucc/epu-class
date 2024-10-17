@@ -17,6 +17,7 @@ interface User {
 interface Class {
   classCode: string;
   className: string;
+  lessons: Lesson[];
 }
 
 interface Lesson {
@@ -50,6 +51,7 @@ export interface StudentDetailUser {
   fullName: string | null;
   avatar: string | null;
   isActive: boolean;
+  class: string;
 }
 
 export interface StudentDetailClass {
@@ -57,6 +59,7 @@ export interface StudentDetailClass {
   classCode: string;
   className: string;
   thumbnail: string;
+  lessons: StudentDetailLesson[];
 }
 
 export interface StudentDetailLesson {

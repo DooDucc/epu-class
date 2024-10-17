@@ -3,19 +3,14 @@ export type GetStudentsByClassParams = {
   year: number;
 };
 
-export type GetStudentsByCourseParams = {
-  courseId: string;
-  year: number;
-};
-
-export type GetSubmittedExerciseStatsParams = {
+export type GetLessonExerciseStatsParams = {
   lessonId: string;
 };
 
-export type GetCourseExerciseStatsParams = {
-  courseId: string;
+export type GetClassExerciseStatsParams = {
+  classId: string;
 };
 
-export type GetClassExerciseStatsParams = {
+export type GetTopStudentsByClassParams = {
   classId: string;
 };

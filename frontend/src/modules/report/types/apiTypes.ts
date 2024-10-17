@@ -7,10 +7,6 @@ export type StudentByClassResponse = {
   data: AmountOfStudentsResponse[];
 };
 
-export type StudentByCourseResponse = {
-  data: AmountOfStudentsResponse[];
-};
-
 export type PercentagesResponse = {
   lowRange: number;
   midRange: number;
@@ -24,8 +20,6 @@ export type ClassExerciseStatsResponse = {
   };
 };
 
-export type CourseExerciseStatsResponse = ClassExerciseStatsResponse;
-
 export type ClassResponse = {
   id: string;
   classCode: string;
@@ -34,30 +28,29 @@ export type ClassResponse = {
   majorId: string;
 };
 
-export type CourseResponse = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  classId: string;
-};
-
 export type ClassesResponse = {
   data: {
     classes: ClassResponse[];
   };
 };
 
-export type CoursesResponse = {
-  data: {
-    courses: CourseResponse[];
-  };
-};
-
 export type TotalInfoResponse = {
   data: {
     classCount: number;
-    courseCount: number;
     lessonCount: number;
     studentCount: number;
   };
+};
+
+export type StudentResponse = {
+  id: string;
+  studentCode: string;
+  fullName: string;
+  avatar: string;
+  percentage: number;
+  count: number;
+};
+
+export type TopStudentsResponse = {
+  data: StudentResponse[];
 };

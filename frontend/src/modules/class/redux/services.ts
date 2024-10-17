@@ -4,9 +4,10 @@ import {
   CreateClassAPIData,
   GetClassAPIData,
   GetClassesAPIData,
-  MajorResponse,
   UpdateClassAPIData,
   GetClassResponse,
+  GetLessonsAPIData,
+  GetLessonsResponse,
 } from "../types";
 
 export const apiGetClasses = (
@@ -25,7 +26,7 @@ export const apiGetPublishedClasses = (
   return authorizedApi.get(
     `/classes/published?page=${data.page}&limit=${data.limit}${
       data.search ? `&search=${encodeURIComponent(data.search)}` : ""
-    }${data.majorId ? `&majorId=${data.majorId}` : ""}`
+    }`
   );
 };
 
@@ -47,10 +48,6 @@ export const apiDeleteClass = (id: string) => {
   return authorizedApi.delete(`/classes/${id}`);
 };
 
-export const apiGetMajors = (): Promise<MajorResponse> => {
-  return authorizedApi.get(`/majors`);
-};
-
 export const apiUploadFile = (file: any): Promise<any> => {
   return authorizedApi.post(`/upload/file`, { file });
 };
@@ -61,4 +58,14 @@ export const apiUploadFiles = (files: any): Promise<any> => {
 
 export const apiJoinClass = (classCode: string, userId: string) => {
   return authorizedApi.post(`/classes/${classCode}/join`, { userId });
+};
+
+export const apiGetLessons = (
+  data: GetLessonsAPIData
+): Promise<GetLessonsResponse> => {
+  return authorizedApi.get(`/lessons/all/${data.classId}`);
+};
+
+export const apiUpdateLessonPositions = (data: any) => {
+  return authorizedApi.patch(`/lessons/update-positions`, data);
 };

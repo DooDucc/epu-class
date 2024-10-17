@@ -44,9 +44,8 @@ export type Course = {
   classId: string;
   createdAt: string;
   updatedAt: string;
-  teacher: Teacher;
-  class: ClassType;
   classCode: string;
+  className: string;
   lessons: LessonType[];
   students: any[];
 };
@@ -83,10 +82,8 @@ export type LessonType = {
   videoDuration: number;
   courseId: string;
   teacherId: string;
-  courseName: string;
   createdAt: string;
   updatedAt: string;
-  course: CourseType;
   userProgress?: UserProgressType[];
   attachments?: AttachmentType[];
   note?: any;

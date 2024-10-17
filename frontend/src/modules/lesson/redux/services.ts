@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { authorizedApi } from "../../base";
-import { GetCoursesResponse } from "../../course/types";
+import { GetClassesResponse } from "../../class/types";
 import {
   GetLessonAPIData,
   GetLessonResponse,
@@ -37,11 +37,11 @@ export const apiUpdateLesson = (data: any) => {
   return authorizedApi.patch(`/lessons/${data.id}`, data.body);
 };
 
-export const apiGetCourses = (): Promise<GetCoursesResponse> => {
-  return authorizedApi.get(`/courses/all`);
+export const apiGetClasses = (): Promise<GetClassesResponse> => {
+  return authorizedApi.get(`/classes/all`);
 };
 
-export const apiGetStudentCourses = (
+export const apiGetStudentLessons = (
   studentId: string
 ): Promise<GetStudentCoursesResponse> => {
   return authorizedApi.get(`/lessons/student/${studentId}`);

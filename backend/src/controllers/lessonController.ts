@@ -16,7 +16,7 @@ export const getLessons = async (req: Request, res: Response) => {
             OR: [
               { title: { contains: search as string } },
               { desc: { contains: search as string } },
-              { course: { id: { contains: search as string } } },
+              { class: { id: { contains: search as string } } },
               { id: { contains: search as string } },
             ],
           }
@@ -27,7 +27,6 @@ export const getLessons = async (req: Request, res: Response) => {
       prismaClient.lesson.findMany({
         where,
         include: {
-          course: true,
           userProgress: true,
           attachments: true,
           exercises: true,
@@ -51,20 +50,19 @@ export const getLessons = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllLessons = async (req: Request, res: Response) => {
+export const getLessonsByClass = async (req: Request, res: Response) => {
   try {
-    const { courseId } = req.params;
+    const { classId } = req.params;
 
-    if (!courseId) {
-      return res.status(400).json({ error: "Course ID is required" });
+    if (!classId) {
+      return res.status(400).json({ error: "Class ID is required" });
     }
 
     const lessons = await prismaClient.lesson.findMany({
       where: {
-        courseId,
+        classId,
       },
       include: {
-        course: true,
         userProgress: true,
         attachments: true,
         exercises: true,
@@ -90,20 +88,20 @@ export const createLesson = async (req: Request, res: Response) => {
       isPublished,
       videoUrl,
       videoDuration,
-      courseId,
+      classId,
       exercises,
       attachments,
     } = req.body;
 
-    if (!title || !courseId) {
+    if (!title || !classId) {
       return res
         .status(400)
         .json({ error: "Title and Course ID are required" });
     }
 
-    // Get all lessons with the same courseId
+    // Get all lessons with the same classId
     const existingLessons = await prismaClient.lesson.findMany({
-      where: { courseId },
+      where: { classId },
       orderBy: { position: "desc" },
     });
 
@@ -119,7 +117,7 @@ export const createLesson = async (req: Request, res: Response) => {
         isPublished,
         videoUrl,
         videoDuration,
-        courseId,
+        classId,
         // @ts-ignore
         teacherId: req.user.id,
         exercises: {
@@ -166,7 +164,7 @@ export const updateLesson = async (req: Request, res: Response) => {
       isPublished,
       videoUrl,
       videoDuration,
-      courseId,
+      classId,
       exercises,
       attachments,
     } = req.body;
@@ -187,7 +185,7 @@ export const updateLesson = async (req: Request, res: Response) => {
         isPublished,
         videoUrl,
         videoDuration,
-        courseId,
+        classId,
         // @ts-ignore
         teacherId,
         // Delete existing exercises and create new ones
@@ -243,7 +241,6 @@ export const getLesson = async (req: Request, res: Response) => {
         teacherId: req.user.id,
       },
       include: {
-        course: true,
         userProgress: true,
         attachments: true,
         exercises: true,
@@ -472,18 +469,14 @@ export const getStudentLessons = async (req: Request, res: Response) => {
     const student = await prismaClient.student.findUnique({
       where: { id: studentId },
       include: {
-        courses: {
+        classes: {
           include: {
             lessons: {
               include: {
                 userProgress: {
                   where: { studentId },
                 },
-                course: {
-                  include: {
-                    class: true,
-                  },
-                },
+                class: true,
               },
               orderBy: { position: "asc" },
             },
@@ -496,7 +489,7 @@ export const getStudentLessons = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Student not found" });
     }
 
-    const allLessons = student.courses.flatMap((course) => course.lessons);
+    const allLessons = student.classes.flatMap((item) => item.lessons);
     const totalCount = allLessons.length;
     const lessons = allLessons.slice(skip, skip + limitNumber);
 

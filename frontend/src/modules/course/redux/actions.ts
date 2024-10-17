@@ -154,17 +154,17 @@ export const updateCourse = createAsyncThunk(
         return;
       }
 
-      await apiUpdateCourse({
-        id,
-        body: {
-          title: title ?? currentCourse.title,
-          desc: desc ?? currentCourse.desc,
-          isPublished: isPublished ?? currentCourse.isPublished,
-          teacherId: teacherId ?? currentCourse.teacher.id,
-          classId: classId ?? currentCourse.class.id,
-          imageUrl: imageUrl ?? currentCourse.imageUrl,
-        },
-      });
+      // await apiUpdateCourse({
+      //   id,
+      //   body: {
+      //     title: title ?? currentCourse.title,
+      //     desc: desc ?? currentCourse.desc,
+      //     isPublished: isPublished ?? currentCourse.isPublished,
+      //     teacherId: teacherId ?? currentCourse.teacher.id,
+      //     classId: classId ?? currentCourse.class.id,
+      //     imageUrl: imageUrl ?? currentCourse.imageUrl,
+      //   },
+      // });
 
       handleSuccess();
     } catch (error) {

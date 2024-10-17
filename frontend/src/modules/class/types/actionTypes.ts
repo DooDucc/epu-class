@@ -1,18 +1,18 @@
 export type CreateClassesParams = {
   classCode: string;
   className: string;
-  majorId: string;
+  desc?: string;
   isPublished: boolean;
   thumbnailUrl: string;
   teacherId: string;
-  handleSuccess: () => void;
+  handleSuccess: (id: string) => void;
 };
 
 export type UpdateClassesParams = {
   id: string;
   classCode?: string;
   className?: string;
-  majorId?: string;
+  desc?: string;
   isPublished?: boolean;
   thumbnailUrl?: string;
   teacherId?: string;
@@ -51,4 +51,11 @@ export type JoinClassParams = {
   userId: string;
   handleSuccess: () => void;
   handleFail: (errorMessage: string) => void;
+};
+
+export type UpdateLessonPositionsParams = {
+  classId: string;
+  lessons: { id: string; position: number }[];
+  handleSuccess: () => void;
+  handleFail: () => void;
 };

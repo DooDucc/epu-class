@@ -1,12 +1,12 @@
 import { Router } from "express";
 import authMiddleware from "../middlewares/authMiddleware";
 import {
-  getStudentsByCourseAndYear,
+  getStudentsByLessonAndYear,
   getStudentsByYear,
-  getSubmittedExerciseStats,
-  getCourseExerciseStats,
+  getLessonExerciseStats,
   getClassExerciseStats,
   getTotalInfo,
+  getTopStudentsByClass,
 } from "../controllers/reportController";
 
 export { Router } from "express";
@@ -20,27 +20,27 @@ reportRoutes.get(
 );
 
 reportRoutes.get(
-  "/students/courses/:courseId/:year",
+  "/students/lessons/:lessonId/:year",
   [authMiddleware],
-  getStudentsByCourseAndYear
+  getStudentsByLessonAndYear
 );
 
 reportRoutes.get(
-  "/submitted-exercises/:lessonId",
+  "/lesson-exercise-stats/:lessonId",
   [authMiddleware],
-  getSubmittedExerciseStats
-);
-
-reportRoutes.get(
-  "/course-exercise-stats/:courseId",
-  [authMiddleware],
-  getCourseExerciseStats
+  getLessonExerciseStats
 );
 
 reportRoutes.get(
   "/class-exercise-stats/:classId",
   [authMiddleware],
   getClassExerciseStats
+);
+
+reportRoutes.get(
+  "/top-students/:classId",
+  [authMiddleware],
+  getTopStudentsByClass
 );
 
 reportRoutes.get("/total-info", [authMiddleware], getTotalInfo);

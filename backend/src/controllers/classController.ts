@@ -26,13 +26,11 @@ export const getClasses = async (req: Request, res: Response) => {
       prismaClient.class.findMany({
         where,
         include: {
-          major: true,
           teacher: {
             include: {
               user: true,
             },
           },
-          courses: true,
           students: true,
         },
         skip,
@@ -59,13 +57,11 @@ export const getAllClasses = async (req: Request, res: Response) => {
   try {
     const classes = await prismaClient.class.findMany({
       include: {
-        major: true,
         teacher: {
           include: {
             user: true,
           },
         },
-        courses: true,
         students: true,
       },
     });
@@ -81,16 +77,10 @@ export const getAllClasses = async (req: Request, res: Response) => {
 
 export const createClass = async (req: Request, res: Response) => {
   try {
-    const {
-      classCode,
-      className,
-      majorId,
-      isPublished,
-      thumbnailUrl,
-      teacherId,
-    } = req.body;
+    const { classCode, className, isPublished, thumbnailUrl, teacherId, desc } =
+      req.body;
 
-    if (!classCode || !className || !majorId || !teacherId) {
+    if (!classCode || !className || !teacherId) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -98,13 +88,12 @@ export const createClass = async (req: Request, res: Response) => {
       data: {
         classCode,
         className,
-        majorId,
         isPublished: isPublished || false,
         thumbnail: thumbnailUrl,
         teacherId,
+        desc,
       },
       include: {
-        major: true,
         teacher: {
           include: {
             user: true,
@@ -125,7 +114,7 @@ export const createClass = async (req: Request, res: Response) => {
 export const updateClass = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { className, majorId, isPublished, thumbnailUrl } = req.body;
+    const { className, isPublished, thumbnailUrl, desc } = req.body;
 
     if (!id) {
       return res.status(400).json({ error: "Class ID is required" });
@@ -143,12 +132,11 @@ export const updateClass = async (req: Request, res: Response) => {
       where: { id },
       data: {
         className: className || undefined,
-        majorId: majorId || undefined,
         isPublished: isPublished !== undefined ? isPublished : undefined,
         thumbnail: thumbnailUrl || undefined,
+        desc: desc || undefined,
       },
       include: {
-        major: true,
         teacher: {
           include: {
             user: true,
@@ -177,14 +165,13 @@ export const getClass = async (req: Request, res: Response) => {
     const classData = await prismaClient.class.findUnique({
       where: { id },
       include: {
-        major: true,
         teacher: {
           include: {
             user: true,
           },
         },
-        courses: true,
         students: true,
+        lessons: true,
       },
     });
 
@@ -220,7 +207,7 @@ export const deleteClass = async (req: Request, res: Response) => {
     // Check if the class exists
     const existingClass = await prismaClient.class.findUnique({
       where: { id },
-      include: { courses: true },
+      include: { lessons: true },
     });
 
     if (!existingClass) {
@@ -230,23 +217,23 @@ export const deleteClass = async (req: Request, res: Response) => {
     // Delete all related entities
     await prismaClient.$transaction(async (prisma) => {
       // Get all course IDs
-      const courseIds = existingClass.courses.map((course) => course.id);
+      const courseIds = existingClass.lessons.map((lesson) => lesson.id);
 
-      // Delete all exercises, and attachments for each lesson in each course
+      // Delete all exercises, and attachments for each lesson
       await prisma.exercise.deleteMany({
-        where: { lesson: { courseId: { in: courseIds } } },
+        where: { lesson: { id: { in: courseIds } } },
       });
       await prisma.attachment.deleteMany({
-        where: { lesson: { courseId: { in: courseIds } } },
+        where: { lesson: { id: { in: courseIds } } },
       });
 
-      // Delete all lessons for each course
+      // Delete all lessons
       await prisma.lesson.deleteMany({
-        where: { courseId: { in: courseIds } },
+        where: { id: { in: courseIds } },
       });
 
       // Delete all courses
-      await prisma.course.deleteMany({
+      await prisma.lesson.deleteMany({
         where: { classId: id },
       });
 
@@ -269,7 +256,7 @@ export const deleteClass = async (req: Request, res: Response) => {
 
 export const getPublishedClasses = async (req: Request, res: Response) => {
   try {
-    const { page = 1, limit = 9, search = "", majorId = "" } = req.query;
+    const { page = 1, limit = 9, search = "" } = req.query;
     const pageNumber = parseInt(page as string, 10);
     const limitNumber = parseInt(limit as string, 10);
     const skip = (pageNumber - 1) * limitNumber;
@@ -281,20 +268,17 @@ export const getPublishedClasses = async (req: Request, res: Response) => {
             OR: [{ className: { contains: search as string } }],
           }
         : {}),
-      ...(majorId ? { majorId: majorId as string } : {}),
     };
 
     const [classes, totalCount] = await Promise.all([
       prismaClient.class.findMany({
         where,
         include: {
-          major: true,
           teacher: {
             include: {
               user: true,
             },
           },
-          courses: true,
           students: true,
         },
         skip,
@@ -386,13 +370,11 @@ export const joinClass = async (req: Request, res: Response) => {
       },
       include: {
         students: true,
-        major: true,
         teacher: {
           include: {
             user: true,
           },
         },
-        courses: true,
       },
     });
 

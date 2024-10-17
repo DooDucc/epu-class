@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { COMPONENT_STAGES } from "../../base/utils";
-import { CourseType, LessonState, LessonType, StudentCourse } from "../types";
+import { LessonState, LessonType, StudentLesson } from "../types";
+import { Class } from "../../class/types";
 
 const initialState: LessonState = {
   lesson: {
@@ -13,7 +14,7 @@ const initialState: LessonState = {
     searchTerm: "",
   },
   createLesson: {
-    courses: [],
+    classes: [],
     videoUrl: "",
     attachments: [],
     exercises: [],
@@ -23,7 +24,7 @@ const initialState: LessonState = {
       exercise: "",
     },
   },
-  studentCourse: {
+  studentLesson: {
     data: [],
   },
 };
@@ -51,7 +52,7 @@ export const lessonSlice = createSlice({
     setCreateLesson: (
       state,
       action: PayloadAction<{
-        courses?: CourseType[];
+        classes?: Class[];
         videoUrl?: string;
         attachments?: { name: string; url: string }[];
         exercises?: { name: string; url: string }[];
@@ -67,21 +68,21 @@ export const lessonSlice = createSlice({
         ...action.payload,
       };
     },
-    setStudentCourse: (
+    setStudentLesson: (
       state,
       action: PayloadAction<{
-        data?: StudentCourse[];
+        data?: StudentLesson[];
       }>
     ) => {
-      state.studentCourse = {
-        ...state.studentCourse,
+      state.studentLesson = {
+        ...state.studentLesson,
         ...action.payload,
       };
     },
   },
 });
 
-export const { setLesson, setCreateLesson, setStudentCourse } =
+export const { setLesson, setCreateLesson, setStudentLesson } =
   lessonSlice.actions;
 
 export default lessonSlice.reducer;

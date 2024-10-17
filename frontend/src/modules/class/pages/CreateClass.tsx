@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { appPaths, useAppDispatch, useAppSelector } from "../../base";
-import { createClasses, getMajors } from "../redux/actions";
+import { createClasses } from "../redux/actions";
 import {
   Container,
   Typography,
   TextField,
   Checkbox,
   FormControlLabel,
-  Select,
-  MenuItem,
   Button,
   Box,
-  FormControl,
-  InputLabel,
   Grid,
+  Modal,
 } from "@mui/material";
 import { generateClassCode } from "../utils";
 import { ClassThumbnail } from "../components";
@@ -26,7 +23,7 @@ const CreateClass = () => {
   const navigate = useNavigate();
 
   const {
-    createClass: { majors, thumbnail },
+    createClass: { thumbnail },
   } = useAppSelector((state) => state.class);
 
   const { user } = useAppSelector((state) => state.auth);
@@ -35,11 +32,9 @@ const CreateClass = () => {
   const [className, setClassName] = useState("");
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [isPublished, setIsPublished] = useState(false);
-  const [majorId, setMajorId] = useState("");
-
-  useEffect(() => {
-    dispatch(getMajors());
-  }, [dispatch]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [createdClassId, setCreatedClassId] = useState<string | null>(null);
+  const [desc, setDesc] = useState("");
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -61,9 +56,8 @@ const CreateClass = () => {
           className,
           isPublished,
           thumbnailUrl: thumbnail,
-          majorId,
           teacherId: user.id,
-          handleSuccess: () => {
+          handleSuccess: (id: string) => {
             dispatch(
               setCreateClass({
                 thumbnail: "",
@@ -71,10 +65,18 @@ const CreateClass = () => {
               })
             );
             toast.success("Class is created successfully");
-            navigate(appPaths.TEACHER_CLASS);
+            // navigate(appPaths.TEACHER_CLASS);
+            setCreatedClassId(id);
+            setIsModalOpen(true);
           },
         })
       );
+    }
+  };
+
+  const handleCreateLessons = () => {
+    if (createdClassId) {
+      navigate(`${appPaths.TEACHER_CLASS}/${createdClassId}`);
     }
   };
 
@@ -101,14 +103,27 @@ const CreateClass = () => {
           <Typography variant="h4" component="h1">
             Create New Class
           </Typography>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            form="create-class-form"
-          >
-            Create Class
-          </Button>
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isPublished}
+                  onChange={(e) => setIsPublished(e.target.checked)}
+                />
+              }
+              label="Published"
+              sx={{ mr: 2 }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              form="create-class-form"
+            >
+              Create Class
+            </Button>
+          </Box>
         </Box>
         <Box
           component="form"
@@ -136,29 +151,14 @@ const CreateClass = () => {
                 onChange={(e) => setClassName(e.target.value)}
                 required
               />
-              <FormControl fullWidth margin="normal">
-                <InputLabel id="major-select-label">Major</InputLabel>
-                <Select
-                  labelId="major-select-label"
-                  value={majorId}
-                  onChange={(e) => setMajorId(e.target.value)}
-                  label="Major"
-                >
-                  {majors.map((major) => (
-                    <MenuItem key={major.id} value={major.id}>
-                      {major.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isPublished}
-                    onChange={(e) => setIsPublished(e.target.checked)}
-                  />
-                }
-                label="Published"
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Description"
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                multiline
+                rows={3}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -169,6 +169,45 @@ const CreateClass = () => {
             </Grid>
           </Grid>
         </Box>
+        <Modal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
+            }}
+          >
+            <Typography
+              id="modal-title"
+              variant="h6"
+              component="h2"
+              gutterBottom
+            >
+              Class Created Successfully
+            </Typography>
+            <Typography id="modal-description" sx={{ mt: 2 }}>
+              Please create lessons for the class that you just created.
+            </Typography>
+            <Button
+              onClick={handleCreateLessons}
+              variant="contained"
+              sx={{ mt: 3 }}
+            >
+              Create Lessons
+            </Button>
+          </Box>
+        </Modal>
       </Container>
     </Box>
   );

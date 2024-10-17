@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Box, Grid, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   Cell,
@@ -9,43 +9,43 @@ import {
   Tooltip,
 } from "recharts";
 import { useAppDispatch, useAppSelector } from "../../base";
-import { getClassExerciseStats } from "../redux/actions";
+import { getLessonExerciseStats } from "../redux/actions";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
-const PointOfClass = () => {
+const PointOfLesson = () => {
   const dispatch = useAppDispatch();
 
-  const { classExerciseStats, classes } = useAppSelector(
+  const { lessonExerciseStats, lessons } = useAppSelector(
     (state) => state.report
   );
-  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedLesson, setSelectedLesson] = useState("");
 
   const data = [
-    { name: "0-4", value: classExerciseStats.data.percentages.lowRange },
-    { name: "5-7", value: classExerciseStats.data.percentages.midRange },
+    { name: "0-4", value: lessonExerciseStats.data.percentages.lowRange },
+    { name: "5-7", value: lessonExerciseStats.data.percentages.midRange },
     {
       name: "8-10",
-      value: classExerciseStats.data.percentages.highRange,
+      value: lessonExerciseStats.data.percentages.highRange,
     },
   ];
 
   useEffect(() => {
-    if (classes.data.length > 0) {
-      setSelectedClass(classes.data[0].id);
+    if (lessons.data.length > 0) {
+      setSelectedLesson(lessons.data[0].id);
     }
-  }, [classes]);
+  }, [lessons]);
 
   useEffect(() => {
-    if (selectedClass) {
-      handleGetClassExerciseStats(selectedClass);
+    if (selectedLesson) {
+      handleGetLessonExerciseStats(selectedLesson);
     }
-  }, [selectedClass]);
+  }, [selectedLesson]);
 
-  const handleGetClassExerciseStats = (classId: string) => {
+  const handleGetLessonExerciseStats = (lessonId: string) => {
     dispatch(
-      getClassExerciseStats({
-        classId,
+      getLessonExerciseStats({
+        lessonId,
       })
     );
   };
@@ -56,29 +56,26 @@ const PointOfClass = () => {
         <Box sx={{ width: "100%", height: 250, pb: 1, mb: 5 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h5" component="h2" gutterBottom>
-              Point percentage of class
+              Point percentage of lesson
             </Typography>
             <Autocomplete
               disablePortal
               disableClearable
               id="class-select"
-              options={classes.data}
-              getOptionLabel={(option) => option.className}
+              options={lessons.data}
+              getOptionLabel={(option) => option.title}
               sx={{ width: 200 }}
               renderInput={(params) => (
-                <TextField {...params} label="Search Class" />
+                <TextField {...params} label="Search Lesson" />
               )}
               ListboxProps={{
                 style: {
                   maxHeight: 200,
                 },
               }}
-              value={
-                classes.data.find((c) => c.id === selectedClass) || undefined
-              }
               onChange={(_, newValue) => {
                 if (newValue) {
-                  setSelectedClass(newValue.id);
+                  setSelectedLesson(newValue.id);
                 }
               }}
             />
@@ -107,11 +104,11 @@ const PointOfClass = () => {
           </ResponsiveContainer>
         </Box>
         <Typography sx={{ textAlign: "center" }}>
-          Total Submissions: {classExerciseStats.data.totalSubmissions}
+          Total Submissions: {lessonExerciseStats.data.totalSubmissions}
         </Typography>
       </Box>
     </Grid>
   );
 };
 
-export default PointOfClass;
+export default PointOfLesson;

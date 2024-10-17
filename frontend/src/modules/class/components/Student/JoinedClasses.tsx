@@ -6,17 +6,15 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { appPaths } from "../../../base";
 import { Class } from "../../types";
 
 interface JoinedClassesProps {
   classes: Class[];
+  handleCardClick: (classItem: Class) => void;
 }
 
-const JoinedClasses = ({ classes }: JoinedClassesProps) => {
+const JoinedClasses = ({ classes, handleCardClick }: JoinedClassesProps) => {
   const theme = useTheme();
-  const navigate = useNavigate();
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
@@ -33,7 +31,7 @@ const JoinedClasses = ({ classes }: JoinedClassesProps) => {
               boxShadow: theme.shadows[4],
             },
           }}
-          onClick={() => navigate(`${appPaths.STUDENT_CLASS}/${classItem.id}`)}
+          onClick={() => handleCardClick(classItem)}
         >
           <CardMedia
             component="img"
@@ -62,9 +60,6 @@ const JoinedClasses = ({ classes }: JoinedClassesProps) => {
               </Typography>
               <Typography variant="body2" color="text.primary">
                 👥 {classItem.students.length} students
-              </Typography>
-              <Typography variant="body2" color="text.primary">
-                📚 {classItem.courses.length} subjects
               </Typography>
             </Box>
           </CardContent>

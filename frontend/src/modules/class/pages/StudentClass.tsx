@@ -14,14 +14,13 @@ import {
 } from "../../base";
 import { AvailableClasses, ClassCodeModal, JoinedClasses } from "../components";
 import ClassHeader from "../components/Student/ClassHeader";
-import { getMajors, getPublishedClasses, joinClass } from "../redux/actions";
+import { getPublishedClasses, joinClass } from "../redux/actions";
 import { Class, Student } from "../types";
 
 const StudentClass = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [selectedMajor, setSelectedMajor] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
@@ -34,18 +33,13 @@ const StudentClass = () => {
   const [joinedClasses, setJoinedClasses] = useState<Class[]>([]);
   const [availableClasses, setAvailableClasses] = useState<Class[]>([]);
 
-  useEffect(() => {
-    dispatch(getMajors());
-  }, []);
-
   const debouncedGetPublishedClasses = useCallback(
-    debounce((major: string | null, search: string) => {
+    debounce((search: string) => {
       dispatch(
         getPublishedClasses({
           page: 1,
           limit: 9,
           search: search,
-          majorId: major || "",
         })
       );
     }, 300),
@@ -53,8 +47,13 @@ const StudentClass = () => {
   );
 
   useEffect(() => {
-    debouncedGetPublishedClasses(selectedMajor, searchTerm);
-  }, [selectedMajor, searchTerm]);
+    debouncedGetPublishedClasses(searchTerm);
+
+    return () => {
+      setJoinedClasses([]);
+      setAvailableClasses([]);
+    };
+  }, [searchTerm]);
 
   useEffect(() => {
     if (data && user) {
@@ -75,13 +74,15 @@ const StudentClass = () => {
   }, [data, user]);
 
   const handleCardClick = (classItem: Class) => {
-    if (
-      classItem.students.some((student: Student) => student.id === user?.id)
-    ) {
-      navigate(`${appPaths.STUDENT_CLASS}/${classItem.id}`);
-    } else {
-      setSelectedClass(classItem);
-      setModalOpen(true);
+    if (user) {
+      const isRegisterCourse = classItem.students.some(
+        (student: Student) => student.id === user.id
+      );
+      const path = isRegisterCourse
+        ? `${appPaths.STUDENT_CLASS}/${classItem.id}`
+        : `${appPaths.STUDENT_CLASS}/${classItem.id}/review`;
+
+      navigate(path);
     }
   };
 
@@ -107,26 +108,18 @@ const StudentClass = () => {
     handleModalClose();
   };
 
-  console.log(selectedClass?.classCode);
-
-  if (state === COMPONENT_STAGES.LOADING) {
-    return <Loading />;
-  }
-
   return (
     <Box sx={{ p: 2, flex: 1 }}>
-      <ClassHeader
-        selectedMajor={selectedMajor}
-        searchTerm={searchTerm}
-        setSelectedMajor={setSelectedMajor}
-        setSearchTerm={setSearchTerm}
-      />
+      <ClassHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
       <Typography variant="h5" color="primary" mt={4} mb={2}>
         Joined Classes
       </Typography>
       {joinedClasses.length > 0 ? (
-        <JoinedClasses classes={joinedClasses} />
+        <JoinedClasses
+          classes={joinedClasses}
+          handleCardClick={handleCardClick}
+        />
       ) : (
         <EmptyResult
           message="You haven't joined any classes yet."

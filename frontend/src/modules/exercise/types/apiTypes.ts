@@ -3,18 +3,11 @@ export type ClassResponse = {
   className: string;
 };
 
-export type CourseResponse = {
+export type LessonResponse = {
   id: string;
   title: string;
   classId: string;
   class: ClassResponse;
-};
-
-export type LessonResponse = {
-  id: string;
-  title: string;
-  courseId: string;
-  course: CourseResponse;
 };
 
 export type ExerciseResponse = {

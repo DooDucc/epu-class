@@ -25,7 +25,7 @@ const CreateLesson = () => {
   const navigate = useNavigate();
 
   const {
-    createLesson: { courses, videoUrl, exercises, attachments },
+    createLesson: { classes, videoUrl, exercises, attachments },
   } = useAppSelector((state) => state.lesson);
 
   const { user } = useAppSelector((state) => state.auth);
@@ -34,7 +34,7 @@ const CreateLesson = () => {
   const [desc, setDesc] = useState("");
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isPublished, setIsPublished] = useState(false);
-  const [courseId, setCourseId] = useState("");
+  const [classId, setClassId] = useState("");
   const [videoDuration, setVideoDuration] = useState<number>(0);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const CreateLesson = () => {
           desc,
           isPublished,
           videoUrl,
-          courseId,
+          classId,
           exercises,
           attachments,
           videoDuration,
@@ -173,17 +173,17 @@ const CreateLesson = () => {
                 rows={4}
               />
               <FormControl fullWidth margin="normal" required>
-                <InputLabel id="course-select-label">Course</InputLabel>
+                <InputLabel id="class-select-label">Class</InputLabel>
                 <Select
-                  labelId="course-select-label"
-                  value={courseId}
-                  onChange={(e) => setCourseId(e.target.value)}
-                  label="Course"
+                  labelId="class-select-label"
+                  value={classId}
+                  onChange={(e) => setClassId(e.target.value)}
+                  label="Class"
                   required
                 >
-                  {courses.map((course) => (
-                    <MenuItem key={course.id} value={course.id}>
-                      {course.title}
+                  {classes.map((classItem) => (
+                    <MenuItem key={classItem.id} value={classItem.id}>
+                      {classItem.className}
                     </MenuItem>
                   ))}
                 </Select>

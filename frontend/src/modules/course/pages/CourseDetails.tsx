@@ -18,7 +18,7 @@ import { setCourse } from "../redux/slice";
 const CourseDetails = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { id: courseId, lessonId } = useParams<{
+  const { id: classId, lessonId } = useParams<{
     id: string;
     lessonId: string;
   }>();
@@ -37,14 +37,14 @@ const CourseDetails = () => {
     updatingCourse?.lessons?.filter((lesson) => lesson.isPublished) || [];
 
   useEffect(() => {
-    if (courseId) {
-      dispatch(getCourse({ id: courseId }));
+    if (classId) {
+      dispatch(getCourse({ id: classId }));
     }
 
     return () => {
-      dispatch(setCourse({ data: [] }));
+      dispatch(setCourse({ data: [], updatingCourse: null }));
     };
-  }, [courseId]);
+  }, [classId]);
 
   useEffect(() => {
     if (
@@ -106,7 +106,7 @@ const CourseDetails = () => {
         );
         setSelectedLesson(newSelectedLesson);
         navigate(
-          `${appPaths.STUDENT_COURSE}/${courseId}/lessons/${newSelectedLesson.id}`,
+          `${appPaths.STUDENT_CLASS}/${classId}/lessons/${newSelectedLesson.id}`,
           {
             replace: true,
           }
@@ -122,7 +122,7 @@ const CourseDetails = () => {
       })
     );
     setSelectedLesson(lesson);
-    navigate(`${appPaths.STUDENT_COURSE}/${courseId}/lessons/${lesson.id}`);
+    navigate(`${appPaths.STUDENT_CLASS}/${classId}/lessons/${lesson.id}`);
   };
 
   const handleEndVideo = () => {

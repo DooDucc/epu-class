@@ -26,16 +26,10 @@ export type ClassType = {
   className: string;
 };
 
-export type CourseType = {
-  id: string;
-  title: string;
-  class: ClassType;
-};
-
 export type LessonType = {
   id: string;
   title: string;
-  course: CourseType;
+  class: ClassType;
   videoUrl: string;
   attachments: AttachmentType[];
   exercises: ExerciseType[];

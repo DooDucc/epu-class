@@ -22,10 +22,10 @@ export const getSubmittedExercises = createAsyncThunk(
 
       const response = await apiGetSubmittedExercises();
       if (response?.data?.length > 0) {
-        const modifiedData = handleConvertExercises(response.data);
+        const data = handleConvertExercises(response.data);
         dispatch(
           setSubmittedExercises({
-            data: modifiedData,
+            data,
             state: COMPONENT_STAGES.LOADING,
           })
         );

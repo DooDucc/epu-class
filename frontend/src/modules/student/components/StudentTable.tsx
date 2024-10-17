@@ -4,7 +4,6 @@ import {
   Avatar,
   Box,
   Button,
-  Chip,
   Paper,
   Table,
   TableBody,
@@ -14,7 +13,6 @@ import {
   TableRow,
   Select,
   MenuItem,
-  SelectChangeEvent,
   Typography,
   LinearProgress,
 } from "@mui/material";
@@ -58,10 +56,10 @@ const StudentTable: React.FC<StudentTableProps> = ({
         </TableHead>
         <TableBody>
           {students.map((student) => {
-            const totalLessons = student.courses.reduce((total, cls) => {
+            const totalLessons = student.classes.reduce((total, cls) => {
               return total + cls.lessons.length;
             }, 0);
-            const completedLessons = student.courses.reduce((total, cls) => {
+            const completedLessons = student.classes.reduce((total, cls) => {
               return (
                 total +
                 cls.lessons.filter((lesson) =>
@@ -126,7 +124,7 @@ const StudentTable: React.FC<StudentTableProps> = ({
                         value={cls.classCode}
                         onClick={() => {}}
                       >
-                        {cls.classCode} - {cls.className}
+                        {cls.className}
                       </MenuItem>
                     ))}
                   </Select>

@@ -28,14 +28,12 @@ const ExercisePage = () => {
   useEffect(() => {
     if (lessonId) {
       submittedExercises.forEach((exerciseClass) => {
-        exerciseClass.courses.forEach((course) => {
-          const matchingLesson = course.lessons.find(
-            (lesson) => lesson.id === lessonId
-          );
-          if (matchingLesson) {
-            setSelectedLessonExercises(matchingLesson.exercisesSubmitted);
-          }
-        });
+        const matchingLesson = exerciseClass.lessons.find(
+          (lesson) => lesson.id === lessonId
+        );
+        if (matchingLesson) {
+          setSelectedLessonExercises(matchingLesson.exercisesSubmitted);
+        }
       });
     }
   }, [lessonId, submittedExercises]);

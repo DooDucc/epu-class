@@ -2,11 +2,11 @@ import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { appPaths, useAppDispatch, useAppSelector } from "../../base";
-import { CourseSidebar, StudentLessons } from "../components";
-import { getStudentCourses } from "../redux/actions";
+import { ClassSidebar, StudentLessons } from "../components";
+import { getStudentLessons } from "../redux/actions";
 import { StudentLessonType } from "../types";
 
-const StudentCourse = () => {
+const StudentLesson = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -17,21 +17,21 @@ const StudentCourse = () => {
   >([]);
 
   useEffect(() => {
-    dispatch(getStudentCourses({ studentId: user?.id as string }));
+    dispatch(getStudentLessons({ studentId: user?.id as string }));
   }, [user?.id, dispatch]);
 
-  const handleSelectedStudentCourses = (
+  const handleSelectedStudentLessons = (
     lessons: StudentLessonType[],
-    courseId: string
+    classId: string
   ) => {
     setSelectedStudentLessons(lessons);
-    navigate(`${appPaths.STUDENT_COURSE}/${courseId}/lessons`);
+    navigate(`${appPaths.STUDENT_LESSON}/${classId}`);
   };
 
   return (
     <Box sx={{ display: "flex", flex: 1, overflow: "hidden" }}>
-      <CourseSidebar
-        handleSelectedStudentCourses={handleSelectedStudentCourses}
+      <ClassSidebar
+        handleSelectedStudentLessons={handleSelectedStudentLessons}
       />
       <Box
         sx={{
@@ -59,4 +59,4 @@ const StudentCourse = () => {
   );
 };
 
-export default StudentCourse;
+export default StudentLesson;

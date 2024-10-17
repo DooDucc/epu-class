@@ -64,9 +64,6 @@ const AvailableClasses = ({
               <Typography variant="body2" color="text.primary">
                 👥 {classItem.students.length} students
               </Typography>
-              <Typography variant="body2" color="text.primary">
-                📚 {classItem.courses.length} subjects
-              </Typography>
             </Box>
           </CardContent>
         </Card>

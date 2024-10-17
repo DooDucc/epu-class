@@ -30,12 +30,14 @@ import { ChatType } from "../types";
 interface ChatSidebarProps {
   chats: ChatType[];
   activeLessonId: string;
+  studentId: string;
   setSelectedLessonChat: (chat: ChatType) => void;
 }
 
 const ChatSidebar = ({
   chats,
   activeLessonId,
+  studentId,
   setSelectedLessonChat,
 }: ChatSidebarProps) => {
   const dispatch = useAppDispatch();
@@ -72,17 +74,16 @@ const ChatSidebar = ({
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       chat.lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      chat.lesson.course.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      chat.lesson.course.class.className
+      chat.lesson.class.className
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
   );
 
   const handleChatClick = (chat: ChatType) => {
     setSelectedLessonChat(chat);
-    navigate(`${appPaths.TEACHER_CHAT}/lesson/${chat.lessonId}`);
+    navigate(
+      `${appPaths.TEACHER_CHAT}/lesson/${chat.lessonId}/student/${chat.studentId}`
+    );
   };
 
   return (
@@ -149,7 +150,8 @@ const ChatSidebar = ({
                       boxShadow: 1,
                     },
                     backgroundColor:
-                      activeLessonId === chat.lessonId.toString()
+                      activeLessonId === chat.lessonId.toString() &&
+                      studentId === chat.studentId.toString()
                         ? "action.selected"
                         : "inherit",
                   }}
@@ -161,8 +163,7 @@ const ChatSidebar = ({
                     variant="body2"
                     color="text.primary"
                   >
-                    {chat.lesson.course.class.className} -{" "}
-                    {chat.lesson.course.title} - {chat.lesson.title}
+                    {chat.lesson.class.className} - {chat.lesson.title}
                   </Typography>
                   <ListItem
                     alignItems="center"

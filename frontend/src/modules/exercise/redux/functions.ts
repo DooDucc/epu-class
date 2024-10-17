@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CourseResponse, ExerciseResponse, LessonResponse } from "../types";
+import { ExerciseResponse, LessonResponse } from "../types";
 
 export const handleConvertExercises = (data: ExerciseResponse[]) => {
   const groupedData = data.reduce((acc, item) => {
-    const classInfo = item.lesson.course.class;
-    const courseInfo = item.lesson.course;
+    const classInfo = item.lesson.class;
     const lessonInfo = item.lesson;
 
     // Check if class exists
@@ -12,36 +11,22 @@ export const handleConvertExercises = (data: ExerciseResponse[]) => {
       acc[classInfo.id] = {
         id: classInfo.id,
         className: classInfo.className,
-        courses: [],
-      };
-    }
-
-    // Find or create course
-    let course = acc[classInfo.id].courses.find(
-      (c: CourseResponse) => c.id === courseInfo.id
-    );
-    if (!course) {
-      course = {
-        id: courseInfo.id,
-        title: courseInfo.title,
-        classId: courseInfo.classId,
         lessons: [],
       };
-      acc[classInfo.id].courses.push(course);
     }
 
     // Find or create lesson
-    let lesson = course.lessons.find(
+    let lesson = acc[classInfo.id].lessons.find(
       (l: LessonResponse) => l.id === lessonInfo.id
     );
     if (!lesson) {
       lesson = {
         id: lessonInfo.id,
         title: lessonInfo.title,
-        courseId: lessonInfo.courseId,
+        classId: lessonInfo.classId,
         exercisesSubmitted: [],
       };
-      course.lessons.push(lesson);
+      acc[classInfo.id].lessons.push(lesson);
     }
 
     // Add exercise submission

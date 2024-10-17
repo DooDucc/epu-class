@@ -12,7 +12,7 @@ const StudentLessons = ({ selectedStudentLessons }: StudentLessonsProps) => {
 
   const handleLessonClick = (lesson: StudentLessonType) => {
     navigate(
-      `${appPaths.STUDENT_COURSE}/${lesson.courseId}/lessons/${lesson.id}`
+      `${appPaths.STUDENT_CLASS}/${lesson.classId}/lessons/${lesson.id}`
     );
   };
 

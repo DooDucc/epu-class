@@ -43,9 +43,7 @@ const ClassTable: React.FC<ClassTableProps> = ({
   useEffect(() => {
     const sorted = [...classes].sort((a, b) => {
       const isAsc = order === "asc";
-      if (orderBy === "major") {
-        return (a.major.name < b.major.name ? -1 : 1) * (isAsc ? 1 : -1);
-      } else if (orderBy === "isPublished") {
+      if (orderBy === "isPublished") {
         return (
           (a.isPublished === b.isPublished ? 0 : a.isPublished ? -1 : 1) *
           (isAsc ? 1 : -1)
@@ -97,15 +95,6 @@ const ClassTable: React.FC<ClassTableProps> = ({
             </TableCell>
             <TableCell>
               <TableSortLabel
-                active={orderBy === "major"}
-                direction={orderBy === "major" ? order : "asc"}
-                onClick={() => handleRequestSort("major")}
-              >
-                Major
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
                 active={orderBy === "isPublished"}
                 direction={orderBy === "isPublished" ? order : "asc"}
                 onClick={() => handleRequestSort("isPublished")}
@@ -145,7 +134,6 @@ const ClassTable: React.FC<ClassTableProps> = ({
                   {classItem.className}
                 </Box>
               </TableCell>
-              <TableCell>{classItem.major.name}</TableCell>
               <TableCell>
                 <Switch
                   checked={classItem.isPublished}

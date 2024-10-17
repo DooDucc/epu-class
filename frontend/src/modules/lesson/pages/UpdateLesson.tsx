@@ -32,7 +32,7 @@ const UpdateLesson = () => {
   const { id } = useParams<{ id: string }>();
 
   const {
-    createLesson: { courses, videoUrl, uploadState },
+    createLesson: { classes, videoUrl, uploadState },
     lesson: { updatingLesson },
   } = useAppSelector((state) => state.lesson);
 
@@ -40,7 +40,7 @@ const UpdateLesson = () => {
   const [desc, setDesc] = useState("");
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isPublished, setIsPublished] = useState(false);
-  const [courseId, setCourseId] = useState("");
+  const [classId, setClassId] = useState("");
   const [attachments, setAttachments] = useState<AttachmentType[]>([]);
   const [exercises, setExercises] = useState<ExerciseType[]>([]);
   const [videoDuration, setVideoDuration] = useState<number>(0);
@@ -61,7 +61,8 @@ const UpdateLesson = () => {
       setTitle(updatingLesson.title);
       setDesc(updatingLesson.desc);
       setIsPublished(updatingLesson.isPublished);
-      setCourseId(updatingLesson.courseId);
+      // @ts-ignore
+      setClassId(updatingLesson?.classId);
       setAttachments(updatingLesson.attachments || []);
       setExercises(updatingLesson.exercises || []);
 
@@ -149,7 +150,7 @@ const UpdateLesson = () => {
           desc,
           isPublished,
           videoUrl,
-          courseId,
+          classId,
           position: updatingLesson?.position,
           videoDuration,
           handleSuccess: () => {
@@ -234,16 +235,16 @@ const UpdateLesson = () => {
                 rows={4}
               />
               <FormControl fullWidth margin="normal">
-                <InputLabel id="course-select-label">Course</InputLabel>
+                <InputLabel id="class-select-label">Class</InputLabel>
                 <Select
-                  labelId="course-select-label"
-                  value={courseId}
-                  onChange={(e) => setCourseId(e.target.value)}
-                  label="Course"
+                  labelId="class-select-label"
+                  value={classId}
+                  onChange={(e) => setClassId(e.target.value)}
+                  label="Class"
                 >
-                  {courses.map((course) => (
-                    <MenuItem key={course.id} value={course.id}>
-                      {course.title}
+                  {classes.map((classItem) => (
+                    <MenuItem key={classItem.id} value={classItem.id}>
+                      {classItem.className}
                     </MenuItem>
                   ))}
                 </Select>

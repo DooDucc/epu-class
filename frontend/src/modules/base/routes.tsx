@@ -1,24 +1,12 @@
 import { Login, Register } from "../auth";
 import { ChatPage } from "../chat";
-import {
-  ClassDetails,
-  CreateClass,
-  StudentClass,
-  TeacherClass,
-  UpdateClass,
-} from "../class";
-import {
-  CourseDetails,
-  CourseReview,
-  CreateCourse,
-  TeacherCourse,
-  UpdateCourse,
-} from "../course";
+import { CreateClass, StudentClass, TeacherClass, UpdateClass } from "../class";
+import { CourseDetails, CourseReview } from "../course";
 import { ExercisePage } from "../exercise";
 import { HomePage } from "../home";
 import {
   CreateLesson,
-  StudentCourse,
+  StudentLesson,
   TeacherLesson,
   UpdateLesson,
 } from "../lesson";
@@ -33,8 +21,6 @@ export const appPaths = {
   SIGN_UP: "/register",
   TEACHER_CLASS: "/teacher/classes",
   TEACHER_CLASS_CREATE: "/teacher/classes/create",
-  TEACHER_SUBJECT: "/teacher/subjects",
-  TEACHER_SUBJECT_CREATE: "/teacher/subjects/create",
   TEACHER_LESSON: "/teacher/lessons",
   TEACHER_LESSON_CREATE: "/teacher/lessons/create",
   TEACHER_STUDENT: "/teacher/students",
@@ -43,9 +29,8 @@ export const appPaths = {
   TEACHER_CHAT: "/teacher/chats",
   TEACHER_REPORT: "/teacher/reports",
   STUDENT_CLASS: "/student/classes",
-  STUDENT_COURSE: "/student/courses",
-  STUDENT_COURSE_REVIEW: "/student/courses/:id/review",
-  STUDENT_COURSE_LESSON: "/student/courses/:id/lessons/:lessonId",
+  STUDENT_CLASS_REVIEW: "/student/classes/:id/review",
+  STUDENT_CLASS_DETAIL: "/student/classes/:id/lessons/:lessonId",
   STUDENT_LESSON: "/student/lessons",
   PROFILE: "/profile",
 };
@@ -66,18 +51,6 @@ export const privateRoutes = [
   {
     path: `${appPaths.TEACHER_CLASS}/:id`,
     element: <UpdateClass />,
-  },
-  {
-    path: appPaths.TEACHER_SUBJECT,
-    element: <TeacherCourse />,
-  },
-  {
-    path: appPaths.TEACHER_SUBJECT_CREATE,
-    element: <CreateCourse />,
-  },
-  {
-    path: `${appPaths.TEACHER_SUBJECT}/:id`,
-    element: <UpdateCourse />,
   },
   {
     path: appPaths.TEACHER_LESSON,
@@ -112,7 +85,7 @@ export const privateRoutes = [
     element: <ChatPage />,
   },
   {
-    path: `${appPaths.TEACHER_CHAT}/lesson/:lessonId`,
+    path: `${appPaths.TEACHER_CHAT}/lesson/:lessonId/student/:studentId`,
     element: <ChatPage />,
   },
   {
@@ -125,27 +98,23 @@ export const privateRoutes = [
   },
   {
     path: `${appPaths.STUDENT_CLASS}/:id`,
-    element: <ClassDetails />,
+    element: <CourseDetails />,
   },
   {
-    path: appPaths.STUDENT_COURSE_REVIEW,
+    path: appPaths.STUDENT_CLASS_REVIEW,
     element: <CourseReview />,
   },
   {
-    path: `${appPaths.STUDENT_COURSE}/:id`,
+    path: `${appPaths.STUDENT_CLASS}/:id/lessons/:lessonId`,
     element: <CourseDetails />,
   },
   {
-    path: `${appPaths.STUDENT_COURSE}/:id/lessons/:lessonId`,
-    element: <CourseDetails />,
+    path: appPaths.STUDENT_LESSON,
+    element: <StudentLesson />,
   },
   {
-    path: appPaths.STUDENT_COURSE,
-    element: <StudentCourse />,
-  },
-  {
-    path: `${appPaths.STUDENT_COURSE}/:courseId/lessons`,
-    element: <StudentCourse />,
+    path: `${appPaths.STUDENT_LESSON}/:classId`,
+    element: <StudentLesson />,
   },
   {
     path: appPaths.PROFILE,

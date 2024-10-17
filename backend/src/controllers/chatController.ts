@@ -242,16 +242,10 @@ const getTeacherChats = async (
             updatedAt: true,
             attachments: true,
             exercises: true,
-            course: {
+            class: {
               select: {
                 id: true,
-                title: true,
-                class: {
-                  select: {
-                    id: true,
-                    className: true,
-                  },
-                },
+                className: true,
               },
             },
           },

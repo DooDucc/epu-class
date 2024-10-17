@@ -1,14 +1,14 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import { useEffect } from "react";
 import { useAppDispatch } from "../../base";
 import {
   PointOfClass,
-  PointOfCourse,
+  PointOfLesson,
   StudentsOfClass,
-  StudentsOfCourse,
+  TopStudents,
   TotalInfo,
 } from "../components";
-import { getClasses, getCourses, getTotalInfo } from "../redux/actions";
+import { getClasses, getLessons, getTotalInfo } from "../redux/actions";
 
 const ReportPage = () => {
   const dispatch = useAppDispatch();
@@ -16,7 +16,7 @@ const ReportPage = () => {
   useEffect(() => {
     dispatch(getTotalInfo());
     dispatch(getClasses());
-    dispatch(getCourses());
+    dispatch(getLessons());
   }, []);
 
   return (
@@ -25,9 +25,9 @@ const ReportPage = () => {
         <TotalInfo />
         <Grid container spacing={3}>
           <PointOfClass />
-          <PointOfCourse />
+          <PointOfLesson />
           <StudentsOfClass />
-          <StudentsOfCourse />
+          <TopStudents />
         </Grid>
       </Box>
     </Container>

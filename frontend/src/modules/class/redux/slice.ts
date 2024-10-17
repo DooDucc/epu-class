@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { COMPONENT_STAGES } from "../../base/utils";
-import { Class, ClassState, Major } from "../types";
+import { Class, ClassState } from "../types";
 
 const initialState: ClassState = {
   class: {
@@ -10,11 +10,10 @@ const initialState: ClassState = {
     state: COMPONENT_STAGES.LOADING,
     currentPage: 1,
     totalPages: 0,
-    courses: [],
     searchTerm: "",
   },
   createClass: {
-    majors: [],
+    lessons: [],
     thumbnail: "",
     uploadState: "",
   },
@@ -28,11 +27,10 @@ export const classSlice = createSlice({
       state,
       action: PayloadAction<{
         data?: Class[];
-        updatingClass?: Class | null;
+        updatingClass?: any | null;
         state?: string;
         currentPage?: number;
         totalPages?: number;
-        courses?: any[];
         searchTerm?: string;
       }>
     ) => {
@@ -44,9 +42,9 @@ export const classSlice = createSlice({
     setCreateClass: (
       state,
       action: PayloadAction<{
-        majors?: Major[];
         thumbnail?: string;
         uploadState?: string;
+        lessons?: any[];
       }>
     ) => {
       state.createClass = {

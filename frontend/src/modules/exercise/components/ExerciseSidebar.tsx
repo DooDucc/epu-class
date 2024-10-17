@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../base";
-import { Course, Exercise, Lesson } from "../types";
+import { Exercise, Lesson } from "../types";
 
 interface ExerciseSidebarProps {
   handleSelectedLessonExercises: (lesson: Lesson) => void;
@@ -30,7 +30,6 @@ const ExerciseSidebar = ({
   } = useAppSelector((state) => state.exercise);
 
   const [openClasses, setOpenClasses] = useState<Record<string, boolean>>({});
-  const [openCourses, setOpenCourses] = useState<Record<string, boolean>>({});
   const [searchLessons, setSearchLessons] = useState<string>("");
   const [filteredData, setFilteredData] = useState<Exercise[]>([]);
 
@@ -41,10 +40,8 @@ const ExerciseSidebar = ({
   useEffect(() => {
     if (searchLessons) {
       const filtered = submittedExercises.filter((submittedExercise) =>
-        submittedExercise.courses.some((course) =>
-          course.lessons.some((lesson) =>
-            lesson.title.toLowerCase().includes(searchLessons.toLowerCase())
-          )
+        submittedExercise.lessons.some((lesson) =>
+          lesson.title.toLowerCase().includes(searchLessons.toLowerCase())
         )
       );
       setFilteredData(filtered);
@@ -76,35 +73,13 @@ const ExerciseSidebar = ({
     </List>
   );
 
-  const renderCourses = (courses: Course[]) => (
-    <List component="div" disablePadding>
-      {courses.map((course) => (
-        <React.Fragment key={course.id}>
-          <ListItemButton
-            onClick={() => handleToggle(course.id, openCourses, setOpenCourses)}
-            sx={{ pl: 4 }}
-          >
-            <ListItemText primary={course.title} />
-            {openCourses[course.id] ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={openCourses[course.id]} timeout="auto" unmountOnExit>
-            {renderLessons(course.lessons)}
-          </Collapse>
-        </React.Fragment>
-      ))}
-    </List>
-  );
-
   useEffect(() => {
     if (lessonId) {
       submittedExercises.forEach((exerciseClass) => {
-        exerciseClass.courses.forEach((course) => {
-          const matchingLesson = course.lessons.find(
-            (lesson) => lesson.id === lessonId
-          );
+        exerciseClass.lessons.forEach((lesson) => {
+          const matchingLesson = lesson.id === lessonId;
           if (matchingLesson) {
             setOpenClasses((prev) => ({ ...prev, [exerciseClass.id]: true }));
-            setOpenCourses((prev) => ({ ...prev, [course.id]: true }));
           }
         });
       });
@@ -180,7 +155,7 @@ const ExerciseSidebar = ({
                 timeout="auto"
                 unmountOnExit
               >
-                {renderCourses(exerciseClass.courses)}
+                {renderLessons(exerciseClass.lessons)}
               </Collapse>
             </Box>
           ))}

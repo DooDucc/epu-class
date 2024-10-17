@@ -5,11 +5,10 @@ export type ClassState = {
     state: string;
     currentPage: number;
     totalPages: number;
-    courses: any[];
     searchTerm: string;
   };
   createClass: {
-    majors: Major[];
+    lessons: Lesson[];
     thumbnail: string;
     uploadState: string;
   };
@@ -28,18 +27,15 @@ export type Class = {
   id: string;
   classCode: string;
   className: string;
+  desc: string;
   thumbnail: string;
   isPublished: boolean;
   majorId: string;
   teacherId: string;
   createdAt: string;
   updatedAt: string;
-  major: {
-    id: string;
-    name: string;
-  };
   teacher: Teacher;
-  courses: Course[];
+  lessons: Lesson[];
   students: Student[];
 };
 
@@ -51,11 +47,6 @@ export type Teacher = {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-};
-
-export type Major = {
-  id: string;
-  name: string;
 };
 
 export type UserProgress = {
@@ -94,13 +85,13 @@ export type Lesson = {
   isPublished: boolean;
   videoUrl: string;
   videoDuration: number;
-  courseId: string;
   teacherId: string;
   createdAt: string;
   updatedAt: string;
   userProgress: UserProgress[];
   exercises: Exercise[];
   attachments: Attachment[];
+  note?: any;
 };
 
 export type Course = {

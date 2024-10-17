@@ -31,7 +31,7 @@ const CourseDetailsSidebar = ({
       }}
     >
       <Typography variant="h6" sx={{ p: 1, textAlign: "center", boxShadow: 3 }}>
-        {updatingCourse?.title}
+        {updatingCourse?.className}
       </Typography>
       <Lessons
         publishedLessons={publishedLessons}

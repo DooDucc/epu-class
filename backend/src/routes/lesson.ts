@@ -6,7 +6,7 @@ import {
   getLesson,
   updateLesson,
   deleteLesson,
-  getAllLessons,
+  getLessonsByClass,
   updateLessonPositions,
   updateLessonProgress,
   updateNote,
@@ -21,7 +21,7 @@ export { Router } from "express";
 const lessonRoutes = Router();
 
 lessonRoutes.get("/", [authMiddleware], getLessons);
-lessonRoutes.get("/all/:courseId?", [authMiddleware], getAllLessons);
+lessonRoutes.get("/all/:classId?", [authMiddleware], getLessonsByClass);
 lessonRoutes.get("/student/:studentId", [authMiddleware], getStudentLessons);
 lessonRoutes.get("/:id", [authMiddleware], getLesson);
 lessonRoutes.get("/note/:lessonId/:studentId", [authMiddleware], getNote);

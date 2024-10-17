@@ -3,16 +3,8 @@ export type ReportState = {
     data: AmountOfStudents[];
     state: string;
   };
-  studentsByCourse: {
-    data: AmountOfStudents[];
-    state: string;
-  };
-  submittedExerciseStats: {
-    data: [];
-    state: string;
-  };
-  courseExerciseStats: {
-    data: CourseExerciseStats;
+  lessonExerciseStats: {
+    data: LessonExerciseStats;
     state: string;
   };
   classExerciseStats: {
@@ -23,16 +15,16 @@ export type ReportState = {
     data: Class[];
     state: string;
   };
-  courses: {
-    data: Course[];
-    state: string;
-  };
   lessons: {
-    data: any[];
+    data: { id: string; title: string }[];
     state: string;
   };
   totalInfo: {
     data: TotalInfo;
+    state: string;
+  };
+  topStudentsByClass: {
+    data: TopStudent[];
     state: string;
   };
 };
@@ -53,7 +45,7 @@ export type ClassExerciseStats = {
   percentages: Percentages;
 };
 
-export type CourseExerciseStats = ClassExerciseStats;
+export type LessonExerciseStats = ClassExerciseStats;
 
 export type Class = {
   id: string;
@@ -63,16 +55,17 @@ export type Class = {
   majorId: string;
 };
 
-export type Course = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  classId: string;
-};
-
 export type TotalInfo = {
   classCount: number;
-  courseCount: number;
   lessonCount: number;
   studentCount: number;
+};
+
+export type TopStudent = {
+  id: string;
+  studentCode: string;
+  fullName: string;
+  avatar: string;
+  percentage: number;
+  count: number;
 };
